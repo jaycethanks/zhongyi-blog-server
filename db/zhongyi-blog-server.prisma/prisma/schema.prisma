@@ -27,7 +27,7 @@ model Article {
 
   title       String
   description String?
-  content     String   @db.LongText
+  content     String  @db.LongText
 
   keywords String @default("")
   status   Int    @default(0) //0: 草稿 1:发布 3：删除
@@ -36,14 +36,14 @@ model Article {
   password String? // 加密文章
   comments Comment[]
 
-  allowComment Boolean @default(true) @map("allow_comment")
-  liking       Int     @default(0)
-  readers      Int     @default(0)
-  banner       Int     @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
-  categories   String  @default("[]") // String[]
+  allowComment Boolean                @default(true) @map("allow_comment")
+  liking       Int                    @default(0)
+  readers      Int                    @default(0)
+  banner       Int                    @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
+  categories   CategoriesOnArticles[]
 
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("t_articles")
 }
@@ -64,17 +64,38 @@ model Comment {
   liking Int @default(0)
   status Int @default(1) //0:隐藏 1:展示
 
-  article Article @relation(fields:[articleId],references:[artid])  
-  articleId          String @map("article_id")
+  article            Article @relation(fields: [articleId], references: [artid])
+  articleId          String  @map("article_id")
   articleTitle       String? @map("article_title")
   articleDescription String? @map("article_description")
 
   parent         String?
-  parentId       String?   @map("parent_id")
-  parentNickname String?   @map("parent_nickname")
+  parentId       String? @map("parent_id")
+  parentNickname String? @map("parent_nickname")
 
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("t_comment")
+}
+
+model Category {
+  catid       String                 @id @default(uuid())
+  name        String?
+  description String?
+  sort        Int?                   @default(0)
+  relateCount Int?                   @default(0) @map("relate_cout")
+  articles    CategoriesOnArticles[]
+
+  @@map("t_category")
+}
+
+model CategoriesOnArticles {
+  article    Article  @relation(fields: [articleId], references: [artid])
+  articleId  String   @map("article_id")
+  category   Category @relation(fields: [categoryId], references: [catid])
+  categoryId String   @map("category_id")
+
+  @@id([articleId, categoryId])
+  @@map("categories_on_articles")
 }
