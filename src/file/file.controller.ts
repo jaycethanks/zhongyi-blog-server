@@ -5,7 +5,9 @@ import {
   UseInterceptors,
   Get,
   Param,
+  Req,
   Res,
+  Ip,
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -29,8 +31,9 @@ export class FileController {
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-    return file;
+    // console.log('[res]: ', res);
+    const { filename } = file;
+    return '/files/' + filename;
   }
 
   @Get('image/:imgpath')
