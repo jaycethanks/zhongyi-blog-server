@@ -20,9 +20,20 @@ model BlackList {
   @@map("t_blacklist")
 }
 
+model User {
+  userid   String    @id @default(uuid())
+  name     String
+  nickname String?
+  password String
+  articles Article[]
+
+  @@map("t_user")
+}
+
 model Article {
   artid    String @id @default(uuid())
   order    Int    @unique @default(autoincrement())
+  author   User   @relation(fields: [authorId], references: [userid])
   authorId String @map("author_id")
 
   title       String
@@ -33,6 +44,7 @@ model Article {
   status   Int    @default(0) //0: 草稿 1:发布 3：删除
 
   cover    String    @default("")
+  visible  Boolean   @default(true)
   password String? // 加密文章
   comments Comment[]
 
@@ -41,6 +53,8 @@ model Article {
   readers      Int                    @default(0)
   banner       Int                    @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
   categories   CategoriesOnArticles[]
+  columns      ColumnsOnArticles[]
+  tags         TagsOnArticles[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -84,8 +98,9 @@ model Category {
   name        String?
   description String?
   sort        Int?                   @default(0)
-  relateCount Int?                   @default(0) @map("relate_cout")
+  relateCount Int?                   @default(0) @map("relate_count")
   articles    CategoriesOnArticles[]
+  visible     Boolean                @default(true)
 
   @@map("t_category")
 }
@@ -98,4 +113,46 @@ model CategoriesOnArticles {
 
   @@id([articleId, categoryId])
   @@map("categories_on_articles")
+}
+
+model Column {
+  colid       String              @id @default(uuid())
+  name        String
+  description String?
+  cover       String?
+  visible     Boolean             @default(true)
+  relateCount Int?                @default(0) @map("relate_count")
+  articles    ColumnsOnArticles[]
+
+  @@map("t_column")
+}
+
+model ColumnsOnArticles {
+  article   Article @relation(fields: [articleId], references: [artid])
+  articleId String  @map("article_id")
+  column    Column  @relation(fields: [columnId], references: [colid])
+  columnId  String  @map("column_id")
+
+  @@id([articleId, columnId])
+  @@map("columns_on_articles")
+}
+
+model Tag {
+  tagid       String           @id @default(uuid())
+  name        String
+  visible     Boolean          @default(true)
+  relateCount Int?             @default(0) @map("relate_count")
+  articles    TagsOnArticles[]
+
+  @@map("t_tag")
+}
+
+model TagsOnArticles {
+  article   Article @relation(fields: [articleId], references: [artid])
+  articleId String  @map("article_id")
+  tag       Tag     @relation(fields: [tagId], references: [tagid])
+  tagId     String  @map("tag_id")
+
+  @@id([articleId, tagId])
+  @@map("tags_on_articles")
 }
