@@ -4,6 +4,7 @@ import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 //https://github.com/nestjs/serve-static
 import { join } from 'path';
+import { PrismaModule } from './prisma/prisma.module';
 
 //https://docs.nestjs.com/recipes/serve-static
 @Module({
@@ -15,6 +16,7 @@ import { join } from 'path';
       // 访问地址：http://localhost:4567/files/166951453039965d87517gy1h5q5jdwllrj20qo0k0dgh.jpg， 如果无效，则删除dist 目录 重启项目
     }),
     FileModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}
