@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
-import { FileModule } from './file/file.module';
-
-import { ServeStaticModule } from '@nestjs/serve-static';
 //https://github.com/nestjs/serve-static
 import { join } from 'path';
+
+import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
+import { AdminModule } from './admin/admin.module';
+import { FileModule } from './file/file.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 //https://docs.nestjs.com/recipes/serve-static
@@ -17,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     FileModule,
     PrismaModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
