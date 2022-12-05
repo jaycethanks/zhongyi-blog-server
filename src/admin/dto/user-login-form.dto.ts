@@ -1,4 +1,4 @@
-export class AdminUserLoginForm {
+export class AdminLoginFormDto {
   account: string;
   password: string;
 }

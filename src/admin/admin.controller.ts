@@ -1,27 +1,38 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
+// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
-import { AdminUserService } from './admin.service';
-import { CreateAdminUserDto } from './dto/create-user.dto';
-import { UpdateAdminUserDto } from './dto/update-user.dto';
-import { AdminUserLoginForm } from './dto/user-login-form.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation } from '@nestjs/swagger';
+
+import { AdminService } from './admin.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { AdminLoginFormDto } from './dto/user-login-form.dto';
 
 @Controller('admin')
 export class AdminUserController {
-  constructor(private readonly adminUserService: AdminUserService) {}
+  constructor(
+    private readonly adminUserService: AdminService,
+    private readonly authService: AuthService,
+  ) {}
 
+  // @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login/account')
-  login(@Body() adminUserLoginForm: AdminUserLoginForm) {
-    console.log('receive');
-    return this.adminUserService.login(adminUserLoginForm);
+  @ApiOperation({ summary: '用户登陆' })
+  login(@Body() adminUserLoginForm: AdminLoginFormDto) {
+    return this.authService.login(adminUserLoginForm);
   }
-
-  @Get('currentUser/:id')
+  // @UseGuards(JwtAuthGuard)
+  @Get('currentUser/')
   getUserById(@Param('id') userid: string) {
     return this.adminUserService.getUserById(userid);
   }
 
   @Post()
-  create(@Body() createAdminUserDto: CreateAdminUserDto) {
+  create(@Body() createAdminUserDto: CreateUserDto) {
     return this.adminUserService.create(createAdminUserDto);
   }
 
@@ -36,10 +47,7 @@ export class AdminUserController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateAdminUserDto: UpdateAdminUserDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateAdminUserDto: UpdateUserDto) {
     return this.adminUserService.update(+id, updateAdminUserDto);
   }
 

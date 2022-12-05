@@ -2,45 +2,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Injectable } from '@nestjs/common';
 
-import { CreateAdminUserDto } from './dto/create-user.dto';
-import { UpdateAdminUserDto } from './dto/update-user.dto';
-import { AdminUserLoginForm } from './dto/user-login-form.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { AdminLoginFormDto } from './dto/user-login-form.dto';
 
 @Injectable()
-export class AdminUserService {
+export class AdminService {
   constructor(private prisma: PrismaService) {}
-  create(createAdminUserDto: CreateAdminUserDto) {
+  create(createAdminUserDto: CreateUserDto) {
     return 'This action adds a new adminUser';
-  }
-  async login(adminUserLoginForm: AdminUserLoginForm) {
-    const { account, password } = adminUserLoginForm;
-    const result = await this.prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            email: account,
-            password: password,
-          },
-          {
-            phone: account,
-            password: password,
-          },
-        ],
-      },
-    });
-    if (result) {
-      return {
-        status: 'ok',
-        type: 'account',
-        currentAuthority: 'asjdlANLNDASLKNDASNDASASDASNFKAS',
-      };
-    } else {
-      return {
-        status: 'error',
-        type: 'account',
-        currentAuthority: 'guest',
-      };
-    }
   }
 
   async getUserById(userid) {
@@ -72,7 +42,7 @@ export class AdminUserService {
     return `This action returns a #${id} adminUser`;
   }
 
-  update(id: number, updateAdminUserDto: UpdateAdminUserDto) {
+  update(id: number, updateAdminUserDto: UpdateUserDto) {
     return `This action updates a #${id} adminUser`;
   }
 

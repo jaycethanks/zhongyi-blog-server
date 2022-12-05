@@ -130,12 +130,12 @@ model Column {
 }
 
 model ColumnsOnArticles {
-  article   Article @relation(fields: [articleId], references: [artid])
-  articleId String  @map("article_id")
-  column    Column  @relation(fields: [columnId], references: [colid])
-  columnId  String  @map("column_id")
+  article Article @relation(fields: [artid], references: [artid])
+  artid   String  @map("artid")
+  column  Column  @relation(fields: [colid], references: [colid])
+  colid   String  @map("colid")
 
-  @@id([articleId, columnId])
+  @@id([artid, colid])
   @@map("columns_on_articles")
 }
 

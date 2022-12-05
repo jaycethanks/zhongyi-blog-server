@@ -3,16 +3,31 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.create({
-    data: {
-      name: 'jay',
-      phone: '13407135362',
-      email: 'jayce@example.com',
-      password: '123',
+  // await prisma.user.create({
+  //   data: {
+  //     name: 'admin',
+  //     nickname: 'administer',
+  //     phone: '13507135362',
+  //     email: 'admin@example.com',
+  //     password: 'ant.design',
+  //   },
+  // });
+  // const users = await prisma.user.findMany();
+  // console.log('[users]: ', users);
+  const account = '13407135362';
+  const userExist = await prisma.user.findFirst({
+    where: {
+      OR: [
+        {
+          email: account,
+        },
+        {
+          phone: account,
+        },
+      ],
     },
   });
-  const users = await prisma.user.findMany();
-  console.log('[users]: ', users);
+  console.log('[userExist]: ', userExist);
 }
 
 main()

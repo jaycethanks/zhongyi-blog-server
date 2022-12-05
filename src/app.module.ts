@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { AdminModule } from './admin/admin.module';
+import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -20,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
     FileModule,
     PrismaModule,
     AdminModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
