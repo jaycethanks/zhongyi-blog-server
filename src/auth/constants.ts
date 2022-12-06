@@ -1,4 +1,4 @@
 export const jwtConstants = {
-  secret: 'jayce_secret', // jwt 常量
-  expiresIn: '60s', // 超时
+  SECRET: 'jayce_secret', // jwt 常量
+  EXPIRESIN: '3600s', // 超时
 };

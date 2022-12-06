@@ -16,7 +16,8 @@ export class AuthService {
 
   async login(user) {
     const { userid, name } = user;
-    const payload = { username: name, sub: userid };
+    const payload = { username: name, userid: userid };
+    // const payload = { username: name, sub: userid };
     return Result.okData({
       access_token: this.jwtService.sign(payload),
     });
@@ -40,10 +41,13 @@ export class AuthService {
         ],
       },
     });
-    if (!user) {
-      return Result.error('账户名或者密码不正确');
-    }
 
-    return Result.okData(user);
+    /**
+     * 此处的 null 将return 至src/auth/local.strategy.ts - validate 方法
+     * validate 方法期望将返回结果 附加到 Request 请求对象上，
+     * 如果返回 null 则证明用户凭证验证失败，就不会颁发 jwt token
+     * 因此这里当用户验证失败只能 return null
+     */
+    return user;
   }
 }

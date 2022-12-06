@@ -1,4 +1,5 @@
 import { Strategy } from 'passport-local';
+import { Result } from 'src/admin/dto/Result.dto';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -23,8 +24,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       account: username,
       password,
     });
-    console.log('[尝试登录用户]: ', user);
     // return 的 user 会被添加到 Request.user
+    // return { hello: 'word' };
+    if (!user) {
+      throw new UnauthorizedException(
+        Result.error('用户账户或者密码错误', 401),
+      );
+    }
     return user;
   }
   // async validate(adminLoginFormDto: AdminLoginFormDto): Promise<any> {

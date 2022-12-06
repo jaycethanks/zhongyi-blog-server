@@ -1,5 +1,5 @@
 import { AuthService } from 'src/auth/auth.service';
-// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
@@ -12,9 +12,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AdminLoginFormDto } from './dto/user-login-form.dto';
 
 @Controller('admin')
-export class AdminUserController {
+export class AdminController {
   constructor(
-    private readonly adminUserService: AdminService,
+    private readonly adminService: AdminService,
     private readonly authService: AuthService,
   ) {}
 
@@ -22,37 +22,38 @@ export class AdminUserController {
   @Post('login/account')
   @ApiOperation({ summary: '用户登陆' })
   async login(@Req() req) {
-    this.authService.login(req.user);
+    console.log('[req.user]: ', req.user);
     return this.authService.login(req.user);
   }
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('currentUser/')
-  getUserById(@Param('id') userid: string) {
-    return this.adminUserService.getUserById(userid);
+  getUserById(@Req() req) {
+    const { userid, username } = req.user;
+    return this.adminService.getUserById(userid);
   }
 
   @Post()
   create(@Body() createAdminUserDto: CreateUserDto) {
-    return this.adminUserService.create(createAdminUserDto);
+    return this.adminService.create(createAdminUserDto);
   }
 
   @Get()
   findAll() {
-    return this.adminUserService.findAll();
+    return this.adminService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.adminUserService.findOne(+id);
+    return this.adminService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminUserDto: UpdateUserDto) {
-    return this.adminUserService.update(+id, updateAdminUserDto);
+    return this.adminService.update(+id, updateAdminUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.adminUserService.remove(+id);
+    return this.adminService.remove(+id);
   }
 }

@@ -18,15 +18,11 @@ import { LocalStrategy } from './local.strategy';
     // AdminModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+      secret: jwtConstants.SECRET,
+      signOptions: { expiresIn: jwtConstants.EXPIRESIN },
     }),
   ],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    // JwtStrategy
-  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

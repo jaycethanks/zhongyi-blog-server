@@ -4,11 +4,11 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { Module } from '@nestjs/common';
 
 import { AuthModule } from '../auth/auth.module';
-import { AdminUserController } from './admin.controller';
+import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 
 @Module({
-  controllers: [AdminUserController],
+  controllers: [AdminController],
   providers: [AdminService],
   imports: [
     PrismaModule,
