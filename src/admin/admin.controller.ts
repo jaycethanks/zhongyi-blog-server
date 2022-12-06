@@ -18,12 +18,12 @@ export class AdminUserController {
     private readonly authService: AuthService,
   ) {}
 
-  // @UseGuards(AuthGuard('local'))
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard) // or  @UseGuards(AuthGuard('local'))
   @Post('login/account')
   @ApiOperation({ summary: '用户登陆' })
-  login(@Body() adminUserLoginForm: AdminLoginFormDto) {
-    return this.authService.login(adminUserLoginForm);
+  async login(@Req() req) {
+    this.authService.login(req.user);
+    return this.authService.login(req.user);
   }
   // @UseGuards(JwtAuthGuard)
   @Get('currentUser/')

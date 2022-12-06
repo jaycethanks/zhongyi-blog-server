@@ -1,50 +1,32 @@
+import { error } from 'console';
 import { AdminService } from 'src/admin/admin.service';
+import { Result } from 'src/admin/dto/Result.dto';
 import { AdminLoginFormDto } from 'src/admin/dto/user-login-form.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
-
-// import { JwtService } from '@nestjs/jwt';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService, // private jwtService: JwtService, // private adminService: AdminService,
+    private prisma: PrismaService,
+    private jwtService: JwtService, // // private adminService: AdminService,
   ) {}
 
-  async login(adminUserLoginForm: AdminLoginFormDto) {
-    return await this.validateUser(adminUserLoginForm);
-    return {
-      // access_token: this.jwtService.sign(payload),
-    };
+  async login(user) {
+    const { userid, name } = user;
+    const payload = { username: name, sub: userid };
+    return Result.okData({
+      access_token: this.jwtService.sign(payload),
+    });
   }
 
-  async validateUser(adminUserLoginForm: AdminLoginFormDto): Promise<any> {
+  async validateUser(adminUserLoginForm: AdminLoginFormDto): Promise<Result> {
     const { account, password } = adminUserLoginForm;
-    // 账户验存
-    const userExist = await this.prisma.user.findFirst({
-      where: {
-        OR: [
-          {
-            email: account,
-          },
-          {
-            phone: account,
-          },
-        ],
-      },
-    });
-
-    if (!userExist) {
-      return {
-        code: 400,
-        message: '用户不存在',
-      };
-    }
-
     // 密码查验
 
-    const passwordCheck = await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: {
         OR: [
           {
@@ -58,16 +40,10 @@ export class AuthService {
         ],
       },
     });
-    if (!passwordCheck) {
-      return {
-        code: 401,
-        message: '密码错误',
-      };
+    if (!user) {
+      return Result.error('账户名或者密码不正确');
     }
 
-    return {
-      code: 200,
-      data: passwordCheck,
-    };
+    return Result.okData(user);
   }
 }

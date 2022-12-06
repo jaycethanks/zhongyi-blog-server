@@ -17,12 +17,16 @@ import { LocalStrategy } from './local.strategy';
     PrismaModule,
     // AdminModule,
     PassportModule,
-    // JwtModule.register({
-    //   secret: jwtConstants.secret,
-    //   signOptions: { expiresIn: jwtConstants.expiresIn },
-    // }),
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: jwtConstants.expiresIn },
+    }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    // JwtStrategy
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
