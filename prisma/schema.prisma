@@ -21,20 +21,24 @@ model BlackList {
 }
 
 model User {
-  userid   String    @id @default(uuid())
-  name     String
-  nickname String?
-  phone    String    @unique
-  email    String    @unique
-  password String
-  articles Article[]
+  userid    String     @id @default(uuid())
+  name      String
+  nickname  String?
+  phone     String     @unique
+  email     String     @unique
+  password  String
+  avatar    String?
+  articles  Article[]
+  categorys Category[]
+  columns   Column[]
+  tags      Tag[]
 
   @@map("t_user")
 }
 
 model Article {
   artid    String @id @default(uuid())
-  order    Int    @unique @default(autoincrement())
+  sort     Int    @default(0)
   author   User   @relation(fields: [authorId], references: [userid])
   authorId String @map("author_id")
 
@@ -54,12 +58,12 @@ model Article {
   liking       Int                    @default(0)
   readers      Int                    @default(0)
   banner       Int                    @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
-  categories   CategoriesOnArticles[]
-  columns      ColumnsOnArticles[]
-  tags         TagsOnArticles[]
+  categories   CategoriesOnArticles[] // 分类关联
+  columns      ColumnsOnArticles[] // 专栏关联
+  tags         TagsOnArticles[] // 标签关联
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_articles")
 }
@@ -90,50 +94,60 @@ model Comment {
   parentNickname String? @map("parent_nickname")
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_comment")
 }
 
 model Category {
   catid       String                 @id @default(uuid())
-  name        String?
+  name        String                 @unique
   description String?
   sort        Int?                   @default(0)
   relateCount Int?                   @default(0) @map("relate_count")
   articles    CategoriesOnArticles[]
+  user        User                   @relation(fields: [userid], references: [userid])
+  userid      String
   visible     Boolean                @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_category")
 }
 
 model CategoriesOnArticles {
-  article    Article  @relation(fields: [articleId], references: [artid])
-  articleId  String   @map("article_id")
-  category   Category @relation(fields: [categoryId], references: [catid])
-  categoryId String   @map("category_id")
+  article  Article  @relation(fields: [artid], references: [artid])
+  artid    String
+  category Category @relation(fields: [catid], references: [catid])
+  catid    String
 
-  @@id([articleId, categoryId])
+  @@id([artid, catid])
   @@map("categories_on_articles")
 }
 
 model Column {
   colid       String              @id @default(uuid())
-  name        String
+  name        String              @unique
   description String?
   cover       String?
   visible     Boolean             @default(true)
   relateCount Int?                @default(0) @map("relate_count")
   articles    ColumnsOnArticles[]
+  User        User                @relation(fields: [userid], references: [userid])
+  userid      String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_column")
 }
 
 model ColumnsOnArticles {
   article Article @relation(fields: [artid], references: [artid])
-  artid   String  @map("artid")
+  artid   String
   column  Column  @relation(fields: [colid], references: [colid])
-  colid   String  @map("colid")
+  colid   String
 
   @@id([artid, colid])
   @@map("columns_on_articles")
@@ -141,20 +155,25 @@ model ColumnsOnArticles {
 
 model Tag {
   tagid       String           @id @default(uuid())
-  name        String
+  name        String           @unique
   visible     Boolean          @default(true)
   relateCount Int?             @default(0) @map("relate_count")
   articles    TagsOnArticles[]
+  User        User             @relation(fields: [userid], references: [userid])
+  userid      String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_tag")
 }
 
 model TagsOnArticles {
-  article   Article @relation(fields: [articleId], references: [artid])
-  articleId String  @map("article_id")
-  tag       Tag     @relation(fields: [tagId], references: [tagid])
-  tagId     String  @map("tag_id")
+  article Article @relation(fields: [artid], references: [artid])
+  artid   String
+  tag     Tag     @relation(fields: [tagid], references: [tagid])
+  tagid   String
 
-  @@id([articleId, tagId])
+  @@id([artid, tagid])
   @@map("tags_on_articles")
 }

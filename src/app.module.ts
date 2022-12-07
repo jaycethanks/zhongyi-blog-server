@@ -4,6 +4,11 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
+import { AdminArticleModule } from './admin.article/admin.article.module';
+import { AdminCategoryModule } from './admin.category/admin.category.module';
+import { AdminColumnModule } from './admin.column/admin.column.module';
+import { AdminContentModule } from './admin.content/admin.content.module';
+import { AdminTagModule } from './admin.tag/admin.tag.module';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
@@ -22,6 +27,11 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
     AdminModule,
     AuthModule,
+    AdminContentModule,
+    AdminArticleModule,
+    AdminColumnModule,
+    AdminTagModule,
+    AdminCategoryModule,
   ],
 })
 export class AppModule {}

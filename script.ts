@@ -14,7 +14,7 @@ prisma.$on('query', (e) => {
   console.log('Duration: ' + e.duration + 'ms');
 });
 async function main() {
-  // await prisma.user.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.user.create({
     data: {
       name: 'admin',
@@ -22,6 +22,8 @@ async function main() {
       phone: '13407135362',
       email: 'admin@example.com',
       password: 'ant.design',
+      avatar:
+        'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/850.jpg',
     },
   });
   const users = await prisma.user.findMany();

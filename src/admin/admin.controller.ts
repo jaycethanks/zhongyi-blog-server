@@ -1,7 +1,7 @@
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation } from '@nestjs/swagger';
@@ -27,6 +27,7 @@ export class AdminController {
   }
   @UseGuards(JwtAuthGuard)
   @Get('currentUser/')
+  @ApiOperation({ summary: '根据jwt解析userid,获取用户信息' })
   getUserById(@Req() req) {
     const { userid, username } = req.user;
     return this.adminService.getUserById(userid);
