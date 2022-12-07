@@ -14,21 +14,39 @@ export class AdminArticleService {
       content,
       isbanner,
       description,
-      category,
       cover,
-      column,
       password,
-      tags,
       visible,
+      tags,
+      column,
+      category,
     } = createAdminArticleDto;
     // const t_tags = await this.prisma.tag.findMany();
+    // this.prisma.columnsOnArticles.create({
+    //   data:{
+    //     artid
+    //   }
+    // })
     this.prisma.article.create({
       data: {
-        title: title,
-        content: content,
+        title,
+        content,
         authorId: userid,
         banner: isbanner ? 1 : 0,
-        description: description,
+        description,
+        cover,
+        password,
+        visible,
+        columns:{
+          connect:{
+            artid_colid
+          }
+        }
+        // columns: {
+        //   connect: {
+        //     column
+        //   },
+        // },
         // columns:{
         //   create:{
 
@@ -41,7 +59,13 @@ export class AdminArticleService {
         //     }
         //   }
         // },
-        // categories:{}
+        categories:{
+          connect:{
+            artid_catid:{
+              in:
+            },
+          }
+        }
       },
     });
     return 'This action adds a new adminArticle';
