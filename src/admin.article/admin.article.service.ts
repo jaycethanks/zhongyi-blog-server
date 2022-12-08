@@ -41,42 +41,21 @@ export class AdminArticleService {
             },
           },
         },
-        tags: {
-          connectOrCreate: tags.map((_tag) => ({
-            create: {
-              tag: {
-                create: {
-                  name: _tag,
-                },
-              },
-            },
-            where: {
-              tag: {
-                name: _tag,
-              },
-            },
-          })),
-        },
-        // tags:{
-        //   create:tags.map(_tag=>({
-        //     tag:{
-        //       connectOrCreate:{
-        //         tag:{
-        //           connect:{
-        //             tagid
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }))
-        // },
-        // categories:{
-        //   connect:{
-        //     artid_catid:{
-        //       in:
+        // tags: {
+        //   connectOrCreate: tags.map((_tag) => ({
+        //     create: {
+        //       tag: {
+        //         name: _tag,
+        //       },
         //     },
-        //   }
-        // }
+        //     where: {
+        //       tag: {
+        //         tagid: _tag,
+        //       },
+        //     },
+        //   })),
+
+        // },
       },
     });
     return 'This action adds a new adminArticle';
