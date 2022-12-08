@@ -21,12 +21,7 @@ export class AdminArticleService {
       column,
       category,
     } = createAdminArticleDto;
-    // const t_tags = await this.prisma.tag.findMany();
-    // this.prisma.columnsOnArticles.create({
-    //   data:{
-    //     artid
-    //   }
-    // })
+
     this.prisma.article.create({
       data: {
         title,
@@ -37,35 +32,51 @@ export class AdminArticleService {
         cover,
         password,
         visible,
-        columns:{
-          connect:{
-            artid_colid
-          }
-        }
-        // columns: {
-        //   connect: {
-        //     column
-        //   },
-        // },
-        // columns:{
-        //   create:{
-
-        //   }
-        // },
-        // tags:{
-        //   connectOrCreate:{
-        //     where:{
-        //       tagid:{in}
-        //     }
-        //   }
-        // },
-        categories:{
-          connect:{
-            artid_catid:{
-              in:
+        columns: {
+          create: {
+            column: {
+              connect: {
+                colid: column,
+              },
             },
-          }
-        }
+          },
+        },
+        tags: {
+          connectOrCreate: tags.map((_tag) => ({
+            create: {
+              tag: {
+                create: {
+                  name: _tag,
+                },
+              },
+            },
+            where: {
+              tag: {
+                name: _tag,
+              },
+            },
+          })),
+        },
+        // tags:{
+        //   create:tags.map(_tag=>({
+        //     tag:{
+        //       connectOrCreate:{
+        //         tag:{
+        //           connect:{
+        //             tagid
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }))
+        // },
+        // categories:{
+        //   connect:{
+        //     artid_catid:{
+        //       in:
+        //     },
+        //   }
+        // }
       },
     });
     return 'This action adds a new adminArticle';
