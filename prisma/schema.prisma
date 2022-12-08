@@ -54,13 +54,16 @@ model Article {
   password String? // 加密文章
   comments Comment[]
 
-  allowComment Boolean                @default(true) @map("allow_comment")
-  liking       Int                    @default(0)
-  readers      Int                    @default(0)
-  banner       Int                    @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
-  categories   CategoriesOnArticles[] // 分类关联
-  columns      ColumnsOnArticles[] // 专栏关联
-  tags         TagsOnArticles[] // 标签关联
+  allowComment Boolean  @default(true) @map("allow_comment")
+  liking       Int      @default(0)
+  readers      Int      @default(0)
+  banner       Int      @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
+  category     Category @relation(fields: [catid], references: [catid]) // 分类关联
+  catid        String
+  column       Column   @relation(fields: [colid], references: [colid]) // 专栏关联
+  colid        String
+
+  tags TagsOnArticles[] // 标签关联
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -68,6 +71,37 @@ model Article {
   @@map("t_articles")
 }
 
+// 文章和 Tag 是 many-to-many 的关系，一篇文章可以有多个tag, 一个tag 也可以存在于多篇文章，
+model Tag {
+  tagid       String           @id @default(uuid())
+  name        String           @unique
+  visible     Boolean          @default(true)
+  relateCount Int?             @default(0) @map("relate_count")
+  articles    TagsOnArticles[]
+  User        User             @relation(fields: [userid], references: [userid])
+  userid      String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("t_tag")
+}
+
+model TagsOnArticles {
+  // fields ：TagsOnArticles.artid reference:Article.artid
+  article Article @relation(fields: [artid], references: [artid])
+  artid   String
+  tag     Tag     @relation(fields: [tagid], references: [tagid])
+  tagid   String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@id([artid, tagid])
+  @@map("tags_on_articles")
+}
+
+// 文章和 Comment 是 one-to-many 的关系， 一个文章有多个评论，但是某条评论仅关联至一篇文章
 model Comment {
   comid    String  @id @default(uuid())
   content  String  @db.TinyText
@@ -99,16 +133,17 @@ model Comment {
   @@map("t_comment")
 }
 
+// 文章和 Category 是 one-tp-many 的关系，一篇文章只能有有个分类，但是一个分类可以包含多篇文章
 model Category {
-  catid       String                 @id @default(uuid())
-  name        String                 @unique
+  catid       String    @id @default(uuid())
+  name        String    @unique
   description String?
-  sort        Int?                   @default(0)
-  relateCount Int?                   @default(0) @map("relate_count")
-  articles    CategoriesOnArticles[]
-  user        User                   @relation(fields: [userid], references: [userid])
+  sort        Int?      @default(0)
+  relateCount Int?      @default(0) @map("relate_count")
+  articles    Article[]
+  user        User      @relation(fields: [userid], references: [userid])
   userid      String
-  visible     Boolean                @default(true)
+  visible     Boolean   @default(true)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -116,25 +151,16 @@ model Category {
   @@map("t_category")
 }
 
-model CategoriesOnArticles {
-  article  Article  @relation(fields: [artid], references: [artid])
-  artid    String
-  category Category @relation(fields: [catid], references: [catid])
-  catid    String
-
-  @@id([artid, catid])
-  @@map("categories_on_articles")
-}
-
+// 文章和 Column 是 one-tp-many 的关系，一篇文章只能有一个专栏，但是一个专栏可以包含多篇文章
 model Column {
-  colid       String              @id @default(uuid())
-  name        String              @unique
+  colid       String    @id @default(uuid())
+  name        String    @unique
   description String?
   cover       String?
-  visible     Boolean             @default(true)
-  relateCount Int?                @default(0) @map("relate_count")
-  articles    ColumnsOnArticles[]
-  User        User                @relation(fields: [userid], references: [userid])
+  visible     Boolean   @default(true)
+  relateCount Int?      @default(0) @map("relate_count")
+  articles    Article[]
+  User        User      @relation(fields: [userid], references: [userid])
   userid      String
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -143,37 +169,24 @@ model Column {
   @@map("t_column")
 }
 
-model ColumnsOnArticles {
-  article Article @relation(fields: [artid], references: [artid])
-  artid   String
-  column  Column  @relation(fields: [colid], references: [colid])
-  colid   String
+// ! deplicated 多对多
+// model CategoriesOnArticles {
+//   article  Article  @relation(fields: [artid], references: [artid])
+//   artid    String
+//   category Category @relation(fields: [catid], references: [catid])
+//   catid    String
 
-  @@id([artid, colid])
-  @@map("columns_on_articles")
-}
+//   @@id([artid, catid])
+//   @@map("categories_on_articles")
+// }
 
-model Tag {
-  tagid       String           @id @default(uuid())
-  name        String           @unique
-  visible     Boolean          @default(true)
-  relateCount Int?             @default(0) @map("relate_count")
-  articles    TagsOnArticles[]
-  User        User             @relation(fields: [userid], references: [userid])
-  userid      String
+// ! deplicated 多对多
+// model ColumnsOnArticles {
+//   article Article @relation(fields: [artid], references: [artid])
+//   artid   String
+//   column  Column  @relation(fields: [colid], references: [colid])
+//   colid   String
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("t_tag")
-}
-
-model TagsOnArticles {
-  article Article @relation(fields: [artid], references: [artid])
-  artid   String
-  tag     Tag     @relation(fields: [tagid], references: [tagid])
-  tagid   String
-
-  @@id([artid, tagid])
-  @@map("tags_on_articles")
-}
+//   @@id([artid, colid])
+//   @@map("columns_on_articles")
+// }

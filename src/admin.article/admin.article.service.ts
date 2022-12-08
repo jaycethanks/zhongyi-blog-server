@@ -30,32 +30,28 @@ export class AdminArticleService {
         data: {
           title,
           content,
-          authorId: userid,
+          author: {
+            connect: {
+              userid: userid,
+            },
+          },
           banner: isbanner ? 1 : 0,
           description,
           cover,
           password,
           visible,
           status,
-          columns: column
+          column: column
             ? {
-                create: {
-                  column: {
-                    connect: {
-                      colid: column ? column : undefined,
-                    },
-                  },
+                connect: {
+                  colid: column ? column : undefined,
                 },
               }
             : undefined,
-          categories: category
+          category: category
             ? {
-                create: {
-                  category: {
-                    connect: {
-                      catid: category,
-                    },
-                  },
+                connect: {
+                  catid: category,
                 },
               }
             : undefined,
@@ -89,6 +85,18 @@ export class AdminArticleService {
   async findAll(userid: string, type: 1 | 0) {
     try {
       const res = await this.prisma.article.findMany({
+        select: {
+          artid: true,
+          title: true,
+          description: true,
+          cover: true,
+          createdAt: true,
+          readers: true,
+          liking: true,
+          visible: true,
+          comments: true,
+          password: true,
+        },
         where: {
           authorId: userid,
           status: +type, // 网络请求传过来会是string
@@ -109,6 +117,23 @@ export class AdminArticleService {
       const res = await this.prisma.article.findUnique({
         where: {
           artid: id,
+        },
+        include: {
+          column: {
+            select: {
+              colid: true,
+            },
+          },
+          tags: {
+            select: {
+              tagid: true,
+            },
+          },
+          category: {
+            select: {
+              catid: true,
+            },
+          },
         },
       });
       return Result.okData(res);

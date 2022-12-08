@@ -40,10 +40,36 @@ CREATE TABLE `t_articles` (
     `liking` INTEGER NOT NULL DEFAULT 0,
     `readers` INTEGER NOT NULL DEFAULT 0,
     `banner` INTEGER NOT NULL DEFAULT -1,
+    `catid` VARCHAR(191) NOT NULL,
+    `colid` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`artid`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `t_tag` (
+    `tagid` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `visible` BOOLEAN NOT NULL DEFAULT true,
+    `relate_count` INTEGER NULL DEFAULT 0,
+    `userid` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `t_tag_name_key`(`name`),
+    PRIMARY KEY (`tagid`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `tags_on_articles` (
+    `artid` VARCHAR(191) NOT NULL,
+    `tagid` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`artid`, `tagid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -68,7 +94,7 @@ CREATE TABLE `t_comment` (
     `parent_id` VARCHAR(191) NULL,
     `parent_nickname` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`comid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -82,17 +108,11 @@ CREATE TABLE `t_category` (
     `relate_count` INTEGER NULL DEFAULT 0,
     `userid` VARCHAR(191) NOT NULL,
     `visible` BOOLEAN NOT NULL DEFAULT true,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `t_category_name_key`(`name`),
     PRIMARY KEY (`catid`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `categories_on_articles` (
-    `artid` VARCHAR(191) NOT NULL,
-    `catid` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`artid`, `catid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -104,62 +124,21 @@ CREATE TABLE `t_column` (
     `visible` BOOLEAN NOT NULL DEFAULT true,
     `relate_count` INTEGER NULL DEFAULT 0,
     `userid` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `t_column_name_key`(`name`),
     PRIMARY KEY (`colid`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `columns_on_articles` (
-    `artid` VARCHAR(191) NOT NULL,
-    `colid` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`artid`, `colid`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `t_tag` (
-    `tagid` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
-    `visible` BOOLEAN NOT NULL DEFAULT true,
-    `relate_count` INTEGER NULL DEFAULT 0,
-    `userid` VARCHAR(191) NOT NULL,
-
-    UNIQUE INDEX `t_tag_name_key`(`name`),
-    PRIMARY KEY (`tagid`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `tags_on_articles` (
-    `artid` VARCHAR(191) NOT NULL,
-    `tagid` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`artid`, `tagid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `t_comment` ADD CONSTRAINT `t_comment_article_id_fkey` FOREIGN KEY (`article_id`) REFERENCES `t_articles`(`artid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_catid_fkey` FOREIGN KEY (`catid`) REFERENCES `t_category`(`catid`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `t_category` ADD CONSTRAINT `t_category_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `categories_on_articles` ADD CONSTRAINT `categories_on_articles_artid_fkey` FOREIGN KEY (`artid`) REFERENCES `t_articles`(`artid`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `categories_on_articles` ADD CONSTRAINT `categories_on_articles_catid_fkey` FOREIGN KEY (`catid`) REFERENCES `t_category`(`catid`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `t_column` ADD CONSTRAINT `t_column_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `columns_on_articles` ADD CONSTRAINT `columns_on_articles_artid_fkey` FOREIGN KEY (`artid`) REFERENCES `t_articles`(`artid`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `columns_on_articles` ADD CONSTRAINT `columns_on_articles_colid_fkey` FOREIGN KEY (`colid`) REFERENCES `t_column`(`colid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_colid_fkey` FOREIGN KEY (`colid`) REFERENCES `t_column`(`colid`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `t_tag` ADD CONSTRAINT `t_tag_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -169,3 +148,12 @@ ALTER TABLE `tags_on_articles` ADD CONSTRAINT `tags_on_articles_artid_fkey` FORE
 
 -- AddForeignKey
 ALTER TABLE `tags_on_articles` ADD CONSTRAINT `tags_on_articles_tagid_fkey` FOREIGN KEY (`tagid`) REFERENCES `t_tag`(`tagid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `t_comment` ADD CONSTRAINT `t_comment_article_id_fkey` FOREIGN KEY (`article_id`) REFERENCES `t_articles`(`artid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `t_category` ADD CONSTRAINT `t_category_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `t_column` ADD CONSTRAINT `t_column_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;
