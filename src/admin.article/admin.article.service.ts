@@ -1,5 +1,8 @@
+import { error } from 'console';
+
+import { Result } from '@/admin/dto/Result.dto';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 
 import { CreateAdminArticleDto } from './dto/create-admin.article.dto';
 import { UpdateAdminArticleDto } from './dto/update-admin.article.dto';
@@ -8,7 +11,7 @@ import { UpdateAdminArticleDto } from './dto/update-admin.article.dto';
 export class AdminArticleService {
   constructor(private prisma: PrismaService) {}
 
-  create(userid: string, createAdminArticleDto: CreateAdminArticleDto) {
+  async create(userid: string, createAdminArticleDto: CreateAdminArticleDto) {
     const {
       title,
       content,
@@ -18,55 +21,100 @@ export class AdminArticleService {
       password,
       visible,
       tags,
+      status,
       column,
       category,
     } = createAdminArticleDto;
-
-    this.prisma.article.create({
-      data: {
-        title,
-        content,
-        authorId: userid,
-        banner: isbanner ? 1 : 0,
-        description,
-        cover,
-        password,
-        visible,
-        columns: {
-          create: {
-            column: {
-              connect: {
-                colid: column,
-              },
-            },
-          },
+    try {
+      const res = await this.prisma.article.create({
+        data: {
+          title,
+          content,
+          authorId: userid,
+          banner: isbanner ? 1 : 0,
+          description,
+          cover,
+          password,
+          visible,
+          status,
+          columns: column
+            ? {
+                create: {
+                  column: {
+                    connect: {
+                      colid: column ? column : undefined,
+                    },
+                  },
+                },
+              }
+            : undefined,
+          categories: category
+            ? {
+                create: {
+                  category: {
+                    connect: {
+                      catid: category,
+                    },
+                  },
+                },
+              }
+            : undefined,
+          tags:
+            tags.length > 0
+              ? {
+                  create: tags.map((_tag) => ({
+                    tag: {
+                      connectOrCreate: {
+                        create: {
+                          name: _tag,
+                          userid: userid,
+                        },
+                        where: {
+                          tagid: _tag,
+                        },
+                      },
+                    },
+                  })),
+                }
+              : undefined,
         },
-        // tags: {
-        //   connectOrCreate: tags.map((_tag) => ({
-        //     create: {
-        //       tag: {
-        //         name: _tag,
-        //       },
-        //     },
-        //     where: {
-        //       tag: {
-        //         tagid: _tag,
-        //       },
-        //     },
-        //   })),
-
-        // },
-      },
-    });
-    return 'This action adds a new adminArticle';
+      });
+      return Result.okData(res);
+    } catch (error) {
+      console.log('[error]: ', error);
+      return Result.error('文章添加出现了预料之外的错误!', 5002);
+    }
   }
 
-  findAll() {
-    return `This action returns all adminArticle`;
+  async findAll(userid: string, type: 1 | 0) {
+    try {
+      const res = await this.prisma.article.findMany({
+        where: {
+          authorId: userid,
+          status: +type, // 网络请求传过来会是string
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+      return Result.okData(res);
+    } catch (error) {
+      console.log('[error]: ', error);
+      return Result.error('文章查询遇到了预期之外的错误', 5002);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} adminArticle`;
+  async findOne(id: string) {
+    try {
+      const res = await this.prisma.article.findUnique({
+        where: {
+          artid: id,
+        },
+      });
+      return Result.okData(res);
+    } catch (error) {
+      return Result.error('根据id查询文章的时候遇到了预期之外的错误!', 5002);
+    }
   }
 
   update(id: number, updateAdminArticleDto: UpdateAdminArticleDto) {

@@ -10,4 +10,5 @@ export class CreateAdminArticleDto {
   description: string;
   password: string;
   visible: boolean;
+  status: 0 | 1 | 2;
 }
