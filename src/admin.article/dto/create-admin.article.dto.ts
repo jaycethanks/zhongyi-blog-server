@@ -6,9 +6,9 @@ export class CreateAdminArticleDto {
   tags: string[];
   cover: string;
   column: string;
-  isbanner: boolean;
+  banner: 1 | 0;
   description: string;
   password: string;
-  visible: boolean;
+  visible: 1 | 0;
   status: 0 | 1 | 2;
 }

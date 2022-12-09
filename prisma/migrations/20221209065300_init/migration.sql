@@ -34,14 +34,14 @@ CREATE TABLE `t_articles` (
     `keywords` VARCHAR(191) NOT NULL DEFAULT '',
     `status` INTEGER NOT NULL DEFAULT 0,
     `cover` VARCHAR(191) NOT NULL DEFAULT '',
-    `visible` BOOLEAN NOT NULL DEFAULT true,
+    `visible` INTEGER NOT NULL DEFAULT 1,
     `password` VARCHAR(191) NULL,
-    `allow_comment` BOOLEAN NOT NULL DEFAULT true,
+    `allow_comment` INTEGER NOT NULL DEFAULT 1,
     `liking` INTEGER NOT NULL DEFAULT 0,
     `readers` INTEGER NOT NULL DEFAULT 0,
-    `banner` INTEGER NOT NULL DEFAULT -1,
+    `banner` INTEGER NOT NULL DEFAULT 0,
     `catid` VARCHAR(191) NOT NULL,
-    `colid` VARCHAR(191) NOT NULL,
+    `colid` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -52,7 +52,7 @@ CREATE TABLE `t_articles` (
 CREATE TABLE `t_tag` (
     `tagid` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `visible` BOOLEAN NOT NULL DEFAULT true,
+    `visible` INTEGER NOT NULL DEFAULT 1,
     `relate_count` INTEGER NULL DEFAULT 0,
     `userid` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -107,7 +107,7 @@ CREATE TABLE `t_category` (
     `sort` INTEGER NULL DEFAULT 0,
     `relate_count` INTEGER NULL DEFAULT 0,
     `userid` VARCHAR(191) NOT NULL,
-    `visible` BOOLEAN NOT NULL DEFAULT true,
+    `visible` INTEGER NOT NULL DEFAULT 1,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -121,7 +121,7 @@ CREATE TABLE `t_column` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `cover` VARCHAR(191) NULL,
-    `visible` BOOLEAN NOT NULL DEFAULT true,
+    `visible` INTEGER NOT NULL DEFAULT 1,
     `relate_count` INTEGER NULL DEFAULT 0,
     `userid` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -138,7 +138,7 @@ ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_author_id_fkey` FOREIGN KEY 
 ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_catid_fkey` FOREIGN KEY (`catid`) REFERENCES `t_category`(`catid`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_colid_fkey` FOREIGN KEY (`colid`) REFERENCES `t_column`(`colid`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `t_articles` ADD CONSTRAINT `t_articles_colid_fkey` FOREIGN KEY (`colid`) REFERENCES `t_column`(`colid`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `t_tag` ADD CONSTRAINT `t_tag_userid_fkey` FOREIGN KEY (`userid`) REFERENCES `t_user`(`userid`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,28 +1,29 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({
-  log: [
-    { emit: 'event', level: 'query' },
-    { emit: 'stdout', level: 'error' },
-    { emit: 'stdout', level: 'info' },
-    { emit: 'stdout', level: 'warn' },
-  ],
+  log: ['query', 'info'],
+  // log: [
+  //   { emit: 'event', level: 'query' },
+  //   { emit: 'stdout', level: 'error' },
+  //   { emit: 'stdout', level: 'info' },
+  //   { emit: 'stdout', level: 'warn' },
+  // ],
 });
-prisma.$on('query', (e) => {
-  console.log('Query: ' + e.query);
-  console.log('Params: ' + e.params);
-  console.log('Duration: ' + e.duration + 'ms');
-});
+// prisma.$on('query', (e) => {
+//   console.log('Query: ' + e.query);
+//   console.log('Params: ' + e.params);
+//   console.log('Duration: ' + e.duration + 'ms');
+// });
 async function main() {
-  const TEST_USERID = 'cf2de9ea-fd01-4c0b-bdad-43da5359fe12';
-  await prisma.user.deleteMany();
-  // await prisma.tag.deleteMany();
-  // await prisma.column.deleteMany();
-  // await prisma.category.deleteMany();
+  await prisma.tagsOnArticles.deleteMany();
+  await prisma.article.deleteMany();
+  await prisma.tag.deleteMany();
+  await prisma.column.deleteMany();
+  await prisma.category.deleteMany();
 
-  await prisma.user.create({
+  await prisma.user.deleteMany();
+  const user = await prisma.user.create({
     data: {
-      userid: TEST_USERID,
       name: 'admin',
       nickname: 'administer',
       phone: '13407135362',
@@ -32,66 +33,66 @@ async function main() {
         'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/850.jpg',
     },
   });
+  const { userid } = user;
+  await prisma.tag.createMany({
+    data: [
+      {
+        name: '测试tag01',
+        visible: 1,
+        userid,
+      },
+      {
+        name: '测试tag02',
+        visible: 1,
+        userid,
+      },
+      {
+        name: '测试tag03',
+        visible: 1,
+        userid,
+      },
+    ],
+  });
 
-  // await prisma.tag.createMany({
-  //   data: [
-  //     {
-  //       name: '测试tag01',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //     {
-  //       name: '测试tag02',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //     {
-  //       name: '测试tag03',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //   ],
-  // });
+  await prisma.column.createMany({
+    data: [
+      {
+        name: '测试专栏01',
+        description: '这是一个专栏的描述01',
+        userid,
+        visible: 1,
+      },
+      {
+        name: '测试专栏02',
+        description: '这是一个专栏的描述02',
+        userid,
+        visible: 1,
+      },
+    ],
+  });
 
-  // await prisma.column.createMany({
-  //   data: [
-  //     {
-  //       name: '测试专栏01',
-  //       description: '这是一个专栏的描述01',
-  //       userid: TEST_USERID,
-  //       visible: true,
-  //     },
-  //     {
-  //       name: '测试专栏02',
-  //       description: '这是一个专栏的描述02',
-  //       userid: TEST_USERID,
-  //       visible: true,
-  //     },
-  //   ],
-  // });
-
-  // await prisma.category.createMany({
-  //   data: [
-  //     {
-  //       name: '测试分类01',
-  //       description: '测试分类的描述01',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //     {
-  //       name: '测试分类02',
-  //       description: '测试分类的描述02',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //     {
-  //       name: '测试分类03',
-  //       description: '测试分类的描述03',
-  //       visible: true,
-  //       userid: TEST_USERID,
-  //     },
-  //   ],
-  // });
+  await prisma.category.createMany({
+    data: [
+      {
+        name: '测试分类01',
+        description: '测试分类的描述01',
+        visible: 1,
+        userid,
+      },
+      {
+        name: '测试分类02',
+        description: '测试分类的描述02',
+        visible: 1,
+        userid,
+      },
+      {
+        name: '测试分类03',
+        description: '测试分类的描述03',
+        visible: 1,
+        userid,
+      },
+    ],
+  });
   // const account = '13407135362';
   // const password = 'ant.design';
   // const userExist = await prisma.user.findFirst({

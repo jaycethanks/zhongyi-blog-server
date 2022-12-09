@@ -1,4 +1,4 @@
 export class CreateAdminTagDto {
   name: string;
-  visible: boolean;
+  visible: 1 | 0;
 }

@@ -11,11 +11,12 @@ import { UpdateAdminArticleDto } from './dto/update-admin.article.dto';
 export class AdminArticleService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userid: string, createAdminArticleDto: CreateAdminArticleDto) {
+  async upsert(userid: string, createAdminArticleDto: CreateAdminArticleDto) {
     const {
+      artid,
       title,
       content,
-      isbanner,
+      banner,
       description,
       cover,
       password,
@@ -26,55 +27,137 @@ export class AdminArticleService {
       category,
     } = createAdminArticleDto;
     try {
-      const res = await this.prisma.article.create({
-        data: {
-          title,
-          content,
-          author: {
-            connect: {
-              userid: userid,
-            },
+      let res = null;
+      const data = {
+        title,
+        content,
+        author: {
+          connect: {
+            userid: userid,
           },
-          banner: isbanner ? 1 : 0,
-          description,
-          cover,
-          password,
-          visible,
-          status,
-          column: column
+        },
+        banner: banner ? 1 : 0,
+        description,
+        cover,
+        password,
+        visible,
+        status,
+        column: column
+          ? {
+              connect: {
+                colid: column ? column : undefined,
+              },
+            }
+          : undefined,
+        category: category
+          ? {
+              connect: {
+                catid: category,
+              },
+            }
+          : undefined,
+        tags:
+          tags.length > 0
             ? {
-                connect: {
-                  colid: column ? column : undefined,
-                },
-              }
-            : undefined,
-          category: category
-            ? {
-                connect: {
-                  catid: category,
-                },
-              }
-            : undefined,
-          tags:
-            tags.length > 0
-              ? {
-                  create: tags.map((_tag) => ({
-                    tag: {
-                      connectOrCreate: {
-                        create: {
-                          name: _tag,
-                          userid: userid,
-                        },
-                        where: {
-                          tagid: _tag,
-                        },
+                create: tags.map((_tag) => ({
+                  tag: {
+                    connectOrCreate: {
+                      create: {
+                        name: _tag,
+                        userid: userid,
+                      },
+                      where: {
+                        tagid: _tag,
                       },
                     },
-                  })),
+                  },
+                })),
+              }
+            : undefined,
+      };
+      if (artid) {
+        // update
+        // 先断开所有relations
+        await this.prisma.tagsOnArticles.deleteMany({
+          where: {
+            artid: artid,
+          },
+        });
+        await this.prisma.article.update({
+          where: {
+            artid: artid,
+          },
+          data: {
+            column: {
+              disconnect: true, // disconnect one record (https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#disconnect-a-related-record)
+            },
+            category: {
+              disconnect: true,
+            },
+            tags: {
+              set: [], // disconnect all related records (https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#disconnect-all-related-records)
+            },
+          },
+        });
+        //  重新创建
+        res = await this.prisma.article.update({
+          where: {
+            artid,
+          },
+          data: {
+            title,
+            content,
+            author: {
+              connect: {
+                userid: userid,
+              },
+            },
+            banner: banner ? 1 : 0,
+            description,
+            cover,
+            password,
+            visible,
+            status,
+            column: column
+              ? {
+                  connect: {
+                    colid: column,
+                  },
                 }
               : undefined,
-        },
-      });
+            category: category
+              ? {
+                  connect: {
+                    catid: category,
+                  },
+                }
+              : undefined,
+            tags:
+              tags.length > 0
+                ? {
+                    create: tags.map((_tag) => ({
+                      tag: {
+                        connectOrCreate: {
+                          create: {
+                            name: _tag,
+                            userid: userid,
+                          },
+                          where: {
+                            tagid: _tag,
+                          },
+                        },
+                      },
+                    })),
+                  }
+                : undefined,
+          },
+        });
+      } else {
+        // create
+        res = await this.prisma.article.create({
+          data,
+        });
+      }
       return Result.okData(res);
     } catch (error) {
       console.log('[error]: ', error);

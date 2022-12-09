@@ -13,11 +13,11 @@ import { UpdateAdminArticleDto } from './dto/update-admin.article.dto';
 export class AdminArticleController {
   constructor(private readonly adminArticleService: AdminArticleService) {}
 
-  @Post('create')
+  @Post('upsert')
   @ApiOperation({ summary: '根据jwt解析userid,获取用户信息' })
-  create(@Req() req, @Body() createAdminArticleDto: CreateAdminArticleDto) {
+  upsert(@Req() req, @Body() createAdminArticleDto: CreateAdminArticleDto) {
     const { userid } = req.user;
-    return this.adminArticleService.create(userid, createAdminArticleDto);
+    return this.adminArticleService.upsert(userid, createAdminArticleDto);
   }
 
   @Get('findall')

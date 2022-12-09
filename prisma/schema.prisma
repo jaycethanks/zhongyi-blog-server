@@ -50,18 +50,18 @@ model Article {
   status   Int    @default(0) //0: 草稿 1:发布 3：删除
 
   cover    String    @default("")
-  visible  Boolean   @default(true)
+  visible  Int       @default(1) // 0: 不可见 1:可见
   password String? // 加密文章
   comments Comment[]
 
-  allowComment Boolean  @default(true) @map("allow_comment")
-  liking       Int      @default(0)
-  readers      Int      @default(0)
-  banner       Int      @default(-1) //-1 不在 banner 区域展示， >0 banner 区域的顺序
-  category     Category @relation(fields: [catid], references: [catid]) // 分类关联
-  catid        String
-  column       Column   @relation(fields: [colid], references: [colid]) // 专栏关联
-  colid        String
+  allowComment Int       @default(1) @map("allow_comment") // 1: 允许评论 0: 禁止评论
+  liking       Int       @default(0)
+  readers      Int       @default(0)
+  banner       Int       @default(0) //0: 不在 banner 区域展示， 1 banner 区域的顺序
+  category     Category? @relation(fields: [catid], references: [catid]) // 分类关联
+  catid        String?
+  column       Column?   @relation(fields: [colid], references: [colid]) // 专栏关联
+  colid        String?
 
   tags TagsOnArticles[] // 标签关联
 
@@ -75,7 +75,7 @@ model Article {
 model Tag {
   tagid       String           @id @default(uuid())
   name        String           @unique
-  visible     Boolean          @default(true)
+  visible     Int              @default(1)
   relateCount Int?             @default(0) @map("relate_count")
   articles    TagsOnArticles[]
   User        User             @relation(fields: [userid], references: [userid])
@@ -143,7 +143,7 @@ model Category {
   articles    Article[]
   user        User      @relation(fields: [userid], references: [userid])
   userid      String
-  visible     Boolean   @default(true)
+  visible     Int       @default(1)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -157,10 +157,10 @@ model Column {
   name        String    @unique
   description String?
   cover       String?
-  visible     Boolean   @default(true)
+  visible     Int       @default(1)
   relateCount Int?      @default(0) @map("relate_count")
   articles    Article[]
-  User        User      @relation(fields: [userid], references: [userid])
+  user        User      @relation(fields: [userid], references: [userid])
   userid      String
 
   createdAt DateTime @default(now()) @map("created_at")
