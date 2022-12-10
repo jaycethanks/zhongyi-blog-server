@@ -78,7 +78,16 @@ export class AdminCategoryService {
     return `This action updates a #${id} adminCategory`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} adminCategory`;
+  async remove(catid: string) {
+    try {
+      const res = await this.prisma.category.delete({
+        where: {
+          catid,
+        },
+      });
+      return Result.okData(res);
+    } catch (error) {
+      return Result.error('发生了预期之外的错误!', 5002);
+    }
   }
 }

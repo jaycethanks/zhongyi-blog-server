@@ -1,5 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+    Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards
+} from '@nestjs/common';
 
 import { AdminColumnService } from './admin.column.service';
 import { CreateAdminColumnDto } from './dto/create-admin.column.dto';
@@ -36,8 +38,9 @@ export class AdminColumnController {
     return this.adminColumnService.update(+id, updateAdminColumnDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminColumnService.remove(+id);
+  @Delete('delete')
+  @UseGuards(JwtAuthGuard)
+  remove(@Query('colid') colid: string) {
+    return this.adminColumnService.remove(colid);
   }
 }

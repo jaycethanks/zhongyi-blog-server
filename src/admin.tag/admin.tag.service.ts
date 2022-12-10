@@ -74,7 +74,19 @@ export class AdminTagService {
     return `This action updates a #${id} adminTag`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} adminTag`;
+  async remove(tagid: string) {
+    try {
+      const res = await this.prisma.tag.delete({
+        where: {
+          tagid,
+        },
+      });
+      return Result.okData(res);
+    } catch (error) {
+      console.log('[error]: ', error.message);
+      return Result.okData(error);
+
+      return Result.error('发生了预期之外的错误!', 5002);
+    }
   }
 }

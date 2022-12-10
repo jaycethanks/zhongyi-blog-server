@@ -1,3 +1,5 @@
+import { error } from 'console';
+
 import { Result } from '@/admin/dto/Result.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
@@ -79,7 +81,16 @@ export class AdminColumnService {
     return `This action updates a #${id} adminColumn`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} adminColumn`;
+  async remove(colid: string) {
+    try {
+      const res = await this.prisma.column.delete({
+        where: {
+          colid,
+        },
+      });
+      return Result.okData(res);
+    } catch (error) {
+      return Result.error('发生了预期之外的错误!', 5002);
+    }
   }
 }

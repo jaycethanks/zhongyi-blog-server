@@ -1,5 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+    Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards
+} from '@nestjs/common';
 
 import { AdminTagService } from './admin.tag.service';
 import { CreateAdminTagDto } from './dto/create-admin.tag.dto';
@@ -36,8 +38,9 @@ export class AdminTagController {
     return this.adminTagService.update(+id, updateAdminTagDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminTagService.remove(+id);
+  @Delete('delete')
+  @UseGuards(JwtAuthGuard)
+  remove(@Query('tagid') tagid: string) {
+    return this.adminTagService.remove(tagid);
   }
 }

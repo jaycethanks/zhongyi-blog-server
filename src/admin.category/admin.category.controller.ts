@@ -1,5 +1,7 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+    Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards
+} from '@nestjs/common';
 
 import { AdminCategoryService } from './admin.category.service';
 import { CreateAdminCategoryDto } from './dto/create-admin.category.dto';
@@ -35,8 +37,9 @@ export class AdminCategoryController {
     return this.adminCategoryService.update(+id, updateAdminCategoryDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminCategoryService.remove(+id);
+  @Delete('delete')
+  @UseGuards(JwtAuthGuard)
+  remove(@Query('catid') catid: string) {
+    return this.adminCategoryService.remove(catid);
   }
 }
