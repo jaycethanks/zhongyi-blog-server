@@ -8,26 +8,44 @@ import { UpdateAdminColumnDto } from './dto/update-admin.column.dto';
 @Injectable()
 export class AdminColumnService {
   constructor(private prisma: PrismaService) {}
-  async create(userid, createAdminColumnDto: CreateAdminColumnDto) {
-    const { name, description, cover, visible } = createAdminColumnDto;
+  async upsert(userid, createAdminColumnDto: CreateAdminColumnDto) {
+    const { colid, name, description, cover, visible } = createAdminColumnDto;
     try {
-      const checkExisted = await this.prisma.column.findFirst({
-        where: {
-          name,
-        },
-      });
-      if (checkExisted) {
-        return Result.error('命名重复', 5001);
+      let res = null;
+      if (colid) {
+        // update
+        res = await this.prisma.column.update({
+          where: {
+            colid,
+          },
+          data: {
+            name,
+            description,
+            visible,
+            cover,
+          },
+        });
+      } else {
+        // create
+        const checkExisted = await this.prisma.column.findFirst({
+          where: {
+            name,
+          },
+        });
+        if (checkExisted) {
+          return Result.error('命名重复', 5001);
+        }
+
+        res = await this.prisma.column.create({
+          data: {
+            name,
+            description,
+            visible,
+            userid,
+            cover,
+          },
+        });
       }
-      const res = await this.prisma.column.create({
-        data: {
-          name,
-          description,
-          visible,
-          userid,
-          cover,
-        },
-      });
       return Result.okData(res);
     } catch (err) {
       return Result.error('预料之外的错误', 5002);

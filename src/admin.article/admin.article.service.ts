@@ -45,7 +45,7 @@ export class AdminArticleService {
         column: column
           ? {
               connect: {
-                colid: column ? column : undefined,
+                colid: column,
               },
             }
           : undefined,
@@ -77,7 +77,7 @@ export class AdminArticleService {
       };
       if (artid) {
         // update
-        // 先断开所有relations
+        // break all relations fisrt
         await this.prisma.tagsOnArticles.deleteMany({
           where: {
             artid: artid,
@@ -104,53 +104,7 @@ export class AdminArticleService {
           where: {
             artid,
           },
-          data: {
-            title,
-            content,
-            author: {
-              connect: {
-                userid: userid,
-              },
-            },
-            banner: banner ? 1 : 0,
-            description,
-            cover,
-            password,
-            visible,
-            status,
-            column: column
-              ? {
-                  connect: {
-                    colid: column,
-                  },
-                }
-              : undefined,
-            category: category
-              ? {
-                  connect: {
-                    catid: category,
-                  },
-                }
-              : undefined,
-            tags:
-              tags.length > 0
-                ? {
-                    create: tags.map((_tag) => ({
-                      tag: {
-                        connectOrCreate: {
-                          create: {
-                            name: _tag,
-                            userid: userid,
-                          },
-                          where: {
-                            tagid: _tag,
-                          },
-                        },
-                      },
-                    })),
-                  }
-                : undefined,
-          },
+          data,
         });
       } else {
         // create

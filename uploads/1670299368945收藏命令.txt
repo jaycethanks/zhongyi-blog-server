@@ -1,2 +1,0 @@
-查看系统信息工具
-sudo dmidecode --type memory

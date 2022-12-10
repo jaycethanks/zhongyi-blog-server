@@ -1,0 +1,80 @@
+先请求所有的表计
+
+​	allMeterInfos=[
+
+​				{},{},{},{},{},{},{},{},{},{},{},{},{},{},
+
+   ]//所有表计
+
+
+
+  allMeterInfoLatLnss=[//所有表计的经纬度
+
+​				{},{},{},{},{},{},{},{},{},{},{},{},{},{},
+
+   ]
+
+
+
+
+
+​	allExistPlan=[//已经创建的所有任务
+
+
+
+​    ]
+
+
+
+ allExistPlanPloygon=[
+
+​	{
+
+  meterNumberas:300,//表计数量
+  geoRegionInfo:[],//多边形的path数组
+  geoRegionColor:'' //多边形的颜色
+}，
+
+{
+
+  meterNumberas:300,//表计数量
+  geoRegionInfo:[],//多边形的path数组
+  geoRegionColor:'' //多边形的颜色
+}，
+
+{
+
+  meterNumberas:300,//表计数量
+  geoRegionInfo:[],//多边形的path数组
+  geoRegionColor:'' //多边形的颜色
+}
+
+]
+
+ 根据上边的数据渲染好已经存在的计划
+
+
+
+subMeters=[]
+
+ subMeterLatLnss=[//所有表计的经纬度
+
+​				{},{},{},{},{},{},{},{},{},{},{},{},{},{},
+
+   ]
+
+
+
+开始画图  
+
+
+
+当线闭合 或者     画图完成
+
+
+
+
+
+xxfalg =true 
+
+ currentPloygon=null  // 

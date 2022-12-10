@@ -8,24 +8,39 @@ import { UpdateAdminTagDto } from './dto/update-admin.tag.dto';
 @Injectable()
 export class AdminTagService {
   constructor(private prisma: PrismaService) {}
-  async create(userid: string, createAdminTagDto: CreateAdminTagDto) {
-    const { name, visible } = createAdminTagDto;
+  async upsert(userid: string, createAdminTagDto: CreateAdminTagDto) {
+    const { tagid, name, visible } = createAdminTagDto;
     try {
-      const checkExisted = await this.prisma.tag.findFirst({
-        where: {
-          name,
-        },
-      });
-      if (checkExisted) {
-        return Result.error('命名重复', 5001);
+      let res = null;
+      if (tagid) {
+        // update
+        res = await this.prisma.tag.update({
+          where: {
+            tagid,
+          },
+          data: {
+            name,
+            visible,
+          },
+        });
+      } else {
+        // create
+        const checkExisted = await this.prisma.tag.findFirst({
+          where: {
+            name,
+          },
+        });
+        if (checkExisted) {
+          return Result.error('命名重复', 5001);
+        }
+        res = await this.prisma.tag.create({
+          data: {
+            name,
+            visible,
+            userid,
+          },
+        });
       }
-      const res = await this.prisma.tag.create({
-        data: {
-          name,
-          visible,
-          userid,
-        },
-      });
       return Result.okData(res);
     } catch (err) {
       return Result.error('预料之外的错误', 5002);

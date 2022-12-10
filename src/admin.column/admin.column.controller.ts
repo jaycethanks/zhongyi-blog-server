@@ -10,11 +10,11 @@ import { UpdateAdminColumnDto } from './dto/update-admin.column.dto';
 export class AdminColumnController {
   constructor(private readonly adminColumnService: AdminColumnService) {}
 
-  @Post('create')
-  create(@Req() req, @Body() createAdminColumnDto: CreateAdminColumnDto) {
+  @Post('upsert')
+  upsert(@Req() req, @Body() createAdminColumnDto: CreateAdminColumnDto) {
     const { userid } = req.user;
 
-    return this.adminColumnService.create(userid, createAdminColumnDto);
+    return this.adminColumnService.upsert(userid, createAdminColumnDto);
   }
 
   @Get('findall')

@@ -10,10 +10,10 @@ import { UpdateAdminCategoryDto } from './dto/update-admin.category.dto';
 export class AdminCategoryController {
   constructor(private readonly adminCategoryService: AdminCategoryService) {}
 
-  @Post('create')
-  create(@Req() req, @Body() createAdminCategoryDto: CreateAdminCategoryDto) {
+  @Post('upsert')
+  upsert(@Req() req, @Body() createAdminCategoryDto: CreateAdminCategoryDto) {
     const { userid } = req.user;
-    return this.adminCategoryService.create(userid, createAdminCategoryDto);
+    return this.adminCategoryService.upsert(userid, createAdminCategoryDto);
   }
 
   @Get('findall')

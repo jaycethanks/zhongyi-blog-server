@@ -10,11 +10,11 @@ import { UpdateAdminTagDto } from './dto/update-admin.tag.dto';
 export class AdminTagController {
   constructor(private readonly adminTagService: AdminTagService) {}
 
-  @Post('create')
-  create(@Req() req, @Body() createAdminTagDto: CreateAdminTagDto) {
+  @Post('upsert')
+  upsert(@Req() req, @Body() createAdminTagDto: CreateAdminTagDto) {
     const { userid } = req.user;
 
-    return this.adminTagService.create(userid, createAdminTagDto);
+    return this.adminTagService.upsert(userid, createAdminTagDto);
   }
 
   @Get('findall')

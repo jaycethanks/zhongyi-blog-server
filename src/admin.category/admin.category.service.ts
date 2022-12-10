@@ -8,25 +8,43 @@ import { UpdateAdminCategoryDto } from './dto/update-admin.category.dto';
 @Injectable()
 export class AdminCategoryService {
   constructor(private prisma: PrismaService) {}
-  async create(userid, createAdminCategoryDto: CreateAdminCategoryDto) {
-    const { name, description, visible } = createAdminCategoryDto;
+  async upsert(userid, createAdminCategoryDto: CreateAdminCategoryDto) {
+    const { catid, name, description, visible } = createAdminCategoryDto;
     try {
-      const checkExisted = await this.prisma.category.findFirst({
-        where: {
-          name,
-        },
-      });
-      if (checkExisted) {
-        return Result.error('命名重复', 5001);
+      let res = null;
+      if (catid) {
+        // update
+        res = await this.prisma.category.update({
+          where: {
+            catid,
+          },
+          data: {
+            name,
+            description,
+            visible,
+          },
+        });
+      } else {
+        // create
+        const checkExisted = await this.prisma.category.findFirst({
+          where: {
+            name,
+          },
+        });
+        if (checkExisted) {
+          return Result.error('命名重复', 5001);
+        }
+
+        res = await this.prisma.category.create({
+          data: {
+            userid,
+            name,
+            description,
+            visible,
+          },
+        });
       }
-      const res = await this.prisma.category.create({
-        data: {
-          userid,
-          name,
-          description,
-          visible,
-        },
-      });
+
       return Result.okData(res);
     } catch (err) {
       return Result.error('预料之外的错误', 5002);
