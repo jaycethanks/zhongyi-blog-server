@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Coffee {
+  brand: String!
+  flavors: [String!]!
+  id: ID!
+  name: String!
+}
+
+type Query {
+  findAll: [Coffee!]!
+  sayHello: String!
+}
