@@ -32,6 +32,7 @@ model User {
   categorys Category[]
   columns   Column[]
   tags      Tag[]
+  About     About[]
 
   @@map("t_user")
 }
@@ -167,6 +168,18 @@ model Column {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("t_column")
+}
+
+model About {
+  id        String   @id @default(uuid())
+  msg       String   @unique
+  links     String?
+  user      User     @relation(fields: [userid], references: [userid])
+  userid    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("t_about")
 }
 
 // ! deplicated 多对多

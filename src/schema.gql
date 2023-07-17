@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AboutDTO {
+  avatar: String!
+}
+
 """Coffee module"""
 type Coffee {
   brand: String!
@@ -26,7 +30,7 @@ type Mutation {
 }
 
 type Query {
+  about: AboutDTO
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!
-  sayHello: String!
 }

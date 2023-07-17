@@ -17,8 +17,8 @@ import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { FooResolver } from './graqlQLResolver/graqlQLResolver.module'; //https://stackoverflow.com/a/64106012/12261182
 import { CoffeesModule } from './coffees/coffees.module';
+import { BlogAboutModule } from './blog.about/blog.about.module';
 
 //https://docs.nestjs.com/recipes/serve-static
 // console.log('[__dirname]: ', __dirname);\
@@ -53,8 +53,9 @@ import { CoffeesModule } from './coffees/coffees.module';
     AdminColumnModule,
     AdminTagModule,
     AdminCategoryModule,
-    FooResolver,
-    CoffeesModule, //https://stackoverflow.com/a/64106012/12261182
+    CoffeesModule,
+    BlogAboutModule, //https://stackoverflow.com/a/64106012/12261182
   ],
+  providers: [],
 })
 export class AppModule {}
