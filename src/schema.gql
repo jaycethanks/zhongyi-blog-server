@@ -2,14 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Coffee module"""
 type Coffee {
   brand: String!
   flavors: [String!]!
+
+  """A unique identifier"""
   id: ID!
   name: String!
 }
 
+"""Create coffee input object type."""
+input CreateCoffeeInput {
+  brand: String!
+  flavors: [String!]!
+
+  """A new coffee name"""
+  name: String!
+}
+
+type Mutation {
+  createCoffee(createCoffeeInput: CreateCoffeeInput!): Coffee
+}
+
 type Query {
-  findAll: [Coffee!]!
+  coffee(id: ID!): Coffee!
+  coffees: [Coffee!]!
   sayHello: String!
 }

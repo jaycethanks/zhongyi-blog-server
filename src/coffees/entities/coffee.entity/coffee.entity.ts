@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ isAbstract: true })
+@ObjectType({ isAbstract: true, description: 'Coffee module' })
 export class Coffee {
-  @Field(() => ID)
+  @Field(() => ID, { description: 'A unique identifier' })
   id: number;
   name: string;
   brand: string;

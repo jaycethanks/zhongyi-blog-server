@@ -17,7 +17,7 @@ import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { PrismaModule } from './prisma/prisma.module';
-import {FooResolver} from "./graqlQLResolver/graqlQLResolver.module"//https://stackoverflow.com/a/64106012/12261182
+import { FooResolver } from './graqlQLResolver/graqlQLResolver.module'; //https://stackoverflow.com/a/64106012/12261182
 import { CoffeesModule } from './coffees/coffees.module';
 
 //https://docs.nestjs.com/recipes/serve-static
@@ -30,10 +30,10 @@ import { CoffeesModule } from './coffees/coffees.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
       sortSchema: true,
-      buildSchemaOptions:{
+      buildSchemaOptions: {
         numberScalarMode: 'integer',
-      }
-      
+      },
+
       // plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     // ConfigModule.forRoot(),
@@ -54,7 +54,7 @@ import { CoffeesModule } from './coffees/coffees.module';
     AdminTagModule,
     AdminCategoryModule,
     FooResolver,
-    CoffeesModule//https://stackoverflow.com/a/64106012/12261182
+    CoffeesModule, //https://stackoverflow.com/a/64106012/12261182
   ],
 })
 export class AppModule {}
