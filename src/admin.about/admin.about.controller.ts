@@ -34,9 +34,10 @@ export class AdminAboutController {
     return this.adminAboutService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminAboutService.findOne(+id);
+  @Get('getAbout')
+  findOne(@Req() req) {
+    const { userid } = req.user;
+    return this.adminAboutService.findOne(userid);
   }
 
   @Patch(':id')

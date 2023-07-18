@@ -8,36 +8,33 @@ import { Result } from '@/admin/dto/Result.dto';
 export class AdminAboutService {
   constructor(private prisma: PrismaService) {}
 
-  async upsert(userid: any, createAdminAboutDto: CreateAdminAboutDto) {
-    console.log('[createAdminAboutDto]: ', createAdminAboutDto);
-    console.log('[userid]: ', userid);
+  async upsert(userid: string, createAdminAboutDto: CreateAdminAboutDto) {
     const { avatar, links, msg } = createAdminAboutDto;
-
     try {
-      const res_userupdate = await this.prisma.user.update({
-        data: {
-          avatar,
-        },
-        where: {
-          userid,
-        },
-      });
-      const res_aboutcreate = await this.prisma.about.create({
-        data: {
-          userid,
-          links,
-          msg,
-        },
-      });
-
-      console.log('[res_userupdate]: ', res_userupdate);
-      console.log('[res_aboutcreate]: ', res_aboutcreate);
-      return Result.okData({});
+      const [res_userupdate, res_aboutcreate] = await Promise.all([
+        this.prisma.user.update({
+          data: {
+            avatar,
+          },
+          where: {
+            userid,
+          },
+        }),
+        this.prisma.about.create({
+          data: {
+            userid,
+            links,
+            msg,
+          },
+        }),
+      ]);
+      return Result.okData({ usr: res_userupdate, about: res_aboutcreate });
     } catch (e) {
       console.log('[e]: ', e);
       return Result.error('预料之外的错误', 5002);
     }
   }
+
   create(createAdminAboutDto: CreateAdminAboutDto) {
     return 'This action adds a new adminAbout';
   }
@@ -46,8 +43,36 @@ export class AdminAboutService {
     return `This action returns all adminAbout`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} adminAbout`;
+  async findOne(userid: string) {
+    try {
+      const [res_avatar, res_about] = await Promise.all([
+        this.prisma.user.findUnique({
+          select: {
+            avatar: true,
+          },
+          where: {
+            userid: userid,
+          },
+        }),
+        this.prisma.about.findFirst({
+          select: {
+            links: true,
+            msg: true,
+          },
+          where: {
+            userid,
+          },
+          orderBy: {
+            createdAt: 'asc',
+          },
+        }),
+      ]);
+      console.log('res_avatar', res_about);
+      return Result.okData({ avatar: res_avatar.avatar, ...res_about });
+    } catch (e) {
+      console.log('[e]: ', e);
+      return Result.error('预料之外的错误', 5002);
+    }
   }
 
   update(id: number, updateAdminAboutDto: UpdateAdminAboutDto) {
