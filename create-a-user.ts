@@ -1,3 +1,4 @@
+// run this by ts-node(npm install -g ts-node)
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({
