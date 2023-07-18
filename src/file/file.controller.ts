@@ -6,7 +6,16 @@ import { join } from 'path';
 
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import {
-    Controller, Get, Ip, Param, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors
+  Controller,
+  Get,
+  Ip,
+  Param,
+  Post,
+  Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 

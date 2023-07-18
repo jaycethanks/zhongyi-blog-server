@@ -1,6 +1,15 @@
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import {
-    Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 
 import { AdminColumnService } from './admin.column.service';

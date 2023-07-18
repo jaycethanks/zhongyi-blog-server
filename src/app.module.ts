@@ -19,6 +19,7 @@ import { FileModule } from './file/file.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CoffeesModule } from './coffees/coffees.module';
 import { BlogAboutModule } from './blog.about/blog.about.module';
+import { AdminAboutModule } from './admin.about/admin.about.module';
 
 //https://docs.nestjs.com/recipes/serve-static
 // console.log('[__dirname]: ', __dirname);\
@@ -54,7 +55,8 @@ import { BlogAboutModule } from './blog.about/blog.about.module';
     AdminTagModule,
     AdminCategoryModule,
     CoffeesModule,
-    BlogAboutModule, //https://stackoverflow.com/a/64106012/12261182
+    BlogAboutModule,
+    AdminAboutModule, //https://stackoverflow.com/a/64106012/12261182
   ],
   providers: [],
 })
