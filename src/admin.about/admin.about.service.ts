@@ -20,11 +20,14 @@ export class AdminAboutService {
             userid,
           },
         }),
-        this.prisma.about.create({
+        this.prisma.about.update({
           data: {
             userid,
             links,
             msg,
+          },
+          where: {
+            userid,
           },
         }),
       ]);
