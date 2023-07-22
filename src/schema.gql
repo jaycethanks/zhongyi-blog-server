@@ -3,7 +3,9 @@
 # ------------------------------------------------------
 
 type AboutDTO {
-  avatar: String!
+  avatar: String
+  links: String
+  msg: String
 }
 
 """Coffee module"""

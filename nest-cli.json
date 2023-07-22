@@ -5,7 +5,20 @@
   "generateOptions": {
     "spec": false
   },
-  "compilerOptions":{
-    "plugins": ["@nestjs/graphql"]
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@nestjs/graphql",
+        "options": {
+          "typeFileNameSuffix": [
+            ".input.ts",
+            ".dto.ts",
+            ".args.ts",
+            ".entity.ts",
+            ".model.ts"
+          ]
+        }
+      }
+    ]
   }
 }

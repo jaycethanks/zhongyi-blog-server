@@ -1,15 +1,36 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
 import { AboutDTO } from './dto/about.dto/about.dto';
+import { Result } from '@/admin/dto/Result.dto';
+import { GraphqlExceptionFilter } from '@/graphql/exception/GraphqlExceptionFilter';
 @Injectable()
 export class BlogAboutService {
   constructor(private prisma: PrismaService) {}
-  async findOne(): Promise<AboutDTO | null> {
-    return {
-      links: [],
-      msg: 'asdasdasdasdafas',
-      avatar: '112312312231',
+  async findOne(userid: string): Promise<AboutDTO | null> {
+    const [getAvatar, getAbout] = await Promise.all([
+      this.prisma.user.findUnique({
+        select: {
+          avatar: true,
+        },
+        where: {
+          userid: userid,
+        },
+      }),
+      this.prisma.about.findUnique({
+        where: {
+          userid,
+        },
+        select: {
+          links: true,
+          msg: true,
+        },
+      }),
+    ]);
+    const res = {
+      avatar: getAvatar.avatar,
+      ...getAbout,
     };
+    return res;
   }
 }
 

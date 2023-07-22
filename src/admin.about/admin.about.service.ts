@@ -20,9 +20,17 @@ export class AdminAboutService {
             userid,
           },
         }),
-        this.prisma.about.update({
-          data: {
-            userid,
+        this.prisma.about.upsert({
+          create: {
+            links,
+            msg,
+            user: {
+              connect: {
+                userid,
+              },
+            },
+          },
+          update: {
             links,
             msg,
           },
@@ -70,7 +78,6 @@ export class AdminAboutService {
           },
         }),
       ]);
-      console.log('res_avatar', res_about);
       return Result.okData({ avatar: res_avatar.avatar, ...res_about });
     } catch (e) {
       console.log('[e]: ', e);

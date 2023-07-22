@@ -173,7 +173,7 @@ model Column {
 model About {
   id        String   @id @default(uuid())
   msg       String   @db.LongText
-  links     String   @db.LongText
+  links     String?   @db.LongText
   user      User     @relation(fields: [userid], references: [userid])
   userid    String   @unique
   createdAt DateTime @default(now()) @map("created_at")
