@@ -7,8 +7,15 @@ export class BlogPostsResolver {
   constructor(private readonly blogPostsService: BlogPostsService) {}
   @Query(() => [ArticleDto], { name: 'recentPosts', nullable: true })
   async findMany(@Context() context) {
+    const uid = context.req.headers.uid;
+    // const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
+    return this.blogPostsService.findMany(uid);
+  }
+
+  @Query(() => [ArticleDto], { name: 'categories', nullable: true })
+  async findCategoires(@Context() context) {
     // const uid = context.req.headers.uid;
     const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
-    return this.blogPostsService.findMany(uid);
+    return this.blogPostsService.findCategoires(uid);
   }
 }

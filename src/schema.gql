@@ -67,6 +67,7 @@ type Mutation {
 
 type Query {
   about: AboutDTO
+  categories: [ArticleDto!]
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!
   recentPosts: [ArticleDto!]

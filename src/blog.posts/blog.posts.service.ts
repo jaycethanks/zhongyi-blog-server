@@ -6,7 +6,7 @@ import { ArticleDto } from './dto/post.dto/post.dto';
 export class BlogPostsService {
   constructor(private readonly prisma: PrismaService) {}
   async findMany(userid: string) {
-    const posts = await this.prisma.article.findMany({
+    return await this.prisma.article.findMany({
       where: {
         authorId: userid,
         visible: 1,
@@ -26,6 +26,8 @@ export class BlogPostsService {
       },
       take: 20,
     });
-    return posts;
+  }
+  async findCategoires(uid: string) {
+    // return await
   }
 }
