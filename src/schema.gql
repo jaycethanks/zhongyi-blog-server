@@ -8,6 +8,19 @@ type AboutDTO {
   msg: String
 }
 
+"""用于归档每个年份下加载更多按钮."""
+input ArchieveAppendInput {
+  size: Int!
+  start: Int!
+  year: String!
+}
+
+"""接口最终返回的 归档数据结构"""
+type ArchieveDto {
+  posts: [ArticleDto!]!
+  year: String!
+}
+
 """接口最终返回的 文章结构"""
 type ArticleDto {
   artid: String!
@@ -69,9 +82,11 @@ type Mutation {
 
 type Query {
   about: AboutDTO
+  archieves(perMaxSize: Int!): [ArchieveDto!]
   categories: [CategoryDto!]
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!
+  queryMore(pageInfo: ArchieveAppendInput!): [ArticleDto!]
   recentPosts: [ArticleDto!]
 }
 

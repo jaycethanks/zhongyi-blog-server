@@ -14,8 +14,8 @@ export class BlogPostsResolver {
 
   @Query(() => [CategoryDto], { name: 'categories', nullable: true })
   async findCategoires(@Context() context) {
-    // const uid = context.req.headers.uid;
-    const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
+    const uid = context.req.headers.uid;
+    // const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
     return this.blogPostsService.findCategoires(uid);
   }
 }

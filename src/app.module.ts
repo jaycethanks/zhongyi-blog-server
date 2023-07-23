@@ -21,6 +21,7 @@ import { CoffeesModule } from './coffees/coffees.module';
 import { BlogAboutModule } from './blog.about/blog.about.module';
 import { AdminAboutModule } from './admin.about/admin.about.module';
 import { BlogPostsModule } from './blog.posts/blog.posts.module';
+import { BlogArchieveModule } from './blog.archieve/blog.archieve.module';
 
 //https://docs.nestjs.com/recipes/serve-static
 // console.log('[__dirname]: ', __dirname);\
@@ -58,7 +59,8 @@ import { BlogPostsModule } from './blog.posts/blog.posts.module';
     CoffeesModule,
     BlogAboutModule,
     AdminAboutModule,
-    BlogPostsModule, //https://stackoverflow.com/a/64106012/12261182
+    BlogPostsModule,
+    BlogArchieveModule, //https://stackoverflow.com/a/64106012/12261182
   ],
   providers: [],
 })

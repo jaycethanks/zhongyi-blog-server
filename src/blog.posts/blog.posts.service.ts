@@ -7,7 +7,8 @@ export class BlogPostsService {
   constructor(private readonly prisma: PrismaService) {}
   async findMany(userid: string) {
     // 模拟延时 2 秒
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
     return await this.prisma.article.findMany({
       where: {
         authorId: userid,
@@ -30,7 +31,7 @@ export class BlogPostsService {
     });
   }
   async findCategoires(userid: string) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
     return await this.prisma.category.findMany({
       where: {
         userid: userid,
