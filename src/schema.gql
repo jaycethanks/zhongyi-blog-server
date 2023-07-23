@@ -28,7 +28,9 @@ type ArticleDto {
 """分类"""
 type CategoryDto {
   catid: String
+  description: String
   name: String
+  relateCount: Int
 }
 
 """Coffee module"""
@@ -67,7 +69,7 @@ type Mutation {
 
 type Query {
   about: AboutDTO
-  categories: [ArticleDto!]
+  categories: [CategoryDto!]
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!
   recentPosts: [ArticleDto!]

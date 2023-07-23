@@ -6,6 +6,8 @@ import { ArticleDto } from './dto/post.dto/post.dto';
 export class BlogPostsService {
   constructor(private readonly prisma: PrismaService) {}
   async findMany(userid: string) {
+    // 模拟延时 2 秒
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     return await this.prisma.article.findMany({
       where: {
         authorId: userid,
@@ -27,7 +29,12 @@ export class BlogPostsService {
       take: 20,
     });
   }
-  async findCategoires(uid: string) {
-    // return await
+  async findCategoires(userid: string) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return await this.prisma.category.findMany({
+      where: {
+        userid: userid,
+      },
+    });
   }
 }

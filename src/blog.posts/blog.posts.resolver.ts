@@ -1,6 +1,6 @@
 import { Context, Query, Resolver } from '@nestjs/graphql';
 import { BlogPostsService } from './blog.posts.service';
-import { ArticleDto } from './dto/post.dto/post.dto';
+import { ArticleDto, CategoryDto } from './dto/post.dto/post.dto';
 
 @Resolver()
 export class BlogPostsResolver {
@@ -12,7 +12,7 @@ export class BlogPostsResolver {
     return this.blogPostsService.findMany(uid);
   }
 
-  @Query(() => [ArticleDto], { name: 'categories', nullable: true })
+  @Query(() => [CategoryDto], { name: 'categories', nullable: true })
   async findCategoires(@Context() context) {
     // const uid = context.req.headers.uid;
     const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';

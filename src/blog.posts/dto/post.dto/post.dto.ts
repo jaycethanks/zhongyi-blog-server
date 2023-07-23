@@ -4,9 +4,11 @@ export class PostDto {}
 
 //  所有关联到最终生成 Graphql gql schema 的类型都需要声明@ObjectType
 @ObjectType({ isAbstract: true, description: '分类' })
-class CategoryDto {
+export class CategoryDto {
   name?: string;
   catid?: string;
+  description?: string;
+  relateCount?: number; // 数据库保存的字段是relate_count， 但是返回的字段是relateCount, 这里的定义一定要和返回的数据一致
 }
 @ObjectType({ isAbstract: true, description: '专栏' })
 class ColumnDto {
