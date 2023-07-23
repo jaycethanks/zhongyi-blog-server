@@ -1,5 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { ArticleDto } from './dto/post.dto/post.dto';
 
 @Injectable()
 export class BlogPostsService {
@@ -11,17 +12,20 @@ export class BlogPostsService {
         visible: 1,
         status: 1, // 发布
       },
-
+      include: {
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+        category: true,
+        column: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },
-      take: 20, // 相当于limit
+      take: 20,
     });
-    // 将password 转base64
-    const encodedPosts = posts.map((post) => ({
-      ...post,
-      password: post.password && Buffer.from(post.password).toString('base64'),
-    }));
-    return encodedPosts;
+    return posts;
   }
 }

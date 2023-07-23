@@ -8,20 +8,27 @@ type AboutDTO {
   msg: String
 }
 
+"""接口最终返回的 文章结构"""
 type ArticleDto {
   artid: String!
   banner: Boolean
-  category: String
-  column: String
+  category: CategoryDto
+  column: ColumnDto
   content: String
   cover: String
   createdAt: DateTime!
   description: String
   password: String
   status: Int
-  tags: [String!]
+  tags: [TagDto!]
   title: String!
   visible: Boolean
+}
+
+"""分类"""
+type CategoryDto {
+  catid: String
+  name: String
 }
 
 """Coffee module"""
@@ -32,6 +39,12 @@ type Coffee {
   """A unique identifier"""
   id: ID!
   name: String!
+}
+
+"""专栏"""
+type ColumnDto {
+  colid: String
+  name: String
 }
 
 """Create coffee input object type."""
@@ -57,4 +70,10 @@ type Query {
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!
   recentPosts: [ArticleDto!]
+}
+
+"""标签"""
+type TagDto {
+  name: String
+  tagid: String
 }
