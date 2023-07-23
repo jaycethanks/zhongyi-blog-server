@@ -26,7 +26,6 @@ export class BlogArchieveService {
 
     // 用 map 将文章 按 年份 分组
     const map = new Map<string, Array<ArticleDto>>(null);
-    console.log('perMaxSize', perMaxSize);
     res.forEach((it) => {
       const year = new Date(it.createdAt).getFullYear().toString();
       // 这里 undefined 指的是不做任何操作
