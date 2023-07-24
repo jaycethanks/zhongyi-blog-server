@@ -1,10 +1,31 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { ArticleDto } from './dto/post.dto/post.dto';
+import { encode2Base64 } from '@/utils';
 
 @Injectable()
 export class BlogPostsService {
   constructor(private readonly prisma: PrismaService) {}
+  async findById(userid: string, artid: string) {
+    const res = await this.prisma.article.findFirstOrThrow({
+      where: {
+        // artid,
+        artid,
+        authorId: userid,
+        visible: 1,
+        status: 1, // 发布
+      },
+      include: {
+        author: true,
+        category: true,
+        column: true,
+        tags: true,
+        comments: true,
+      },
+    });
+    res.password && (res.password = encode2Base64(res.password));
+    return res;
+  }
   async findMany(userid: string) {
     // 模拟延时 2 秒
 

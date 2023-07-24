@@ -83,6 +83,7 @@ type Mutation {
 type Query {
   about: AboutDTO
   archieves(perMaxSize: Int!): [ArchieveDto!]
+  article(artid: String!): ArticleDto
   categories: [CategoryDto!]
   coffee(id: ID!): Coffee!
   coffees: [Coffee!]!

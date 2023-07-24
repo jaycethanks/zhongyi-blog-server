@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "ri":"rimraf dist node_modules & pnpm install",
+    "ri": "rimraf dist node_modules & pnpm install",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -37,6 +37,7 @@
     "apollo-server-core": "^3.11.1",
     "apollo-server-express": "^3.11.1",
     "graphql": "^16.6.0",
+    "js-base64": "^3.7.5",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

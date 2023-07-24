@@ -50,6 +50,9 @@ dependencies:
   graphql:
     specifier: ^16.6.0
     version: 16.7.1
+  js-base64:
+    specifier: ^3.7.5
+    version: 3.7.5
   passport:
     specifier: ^0.6.0
     version: 0.6.0
@@ -4384,6 +4387,10 @@ packages:
       - supports-color
       - ts-node
     dev: true
+
+  /js-base64@3.7.5:
+    resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
+    dev: false
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
