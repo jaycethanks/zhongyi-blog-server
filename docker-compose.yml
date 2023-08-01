@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: jaycethanks/zhongyi-blog-server:latest
+    ports:
+      - '3396:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - /home/jayce/softwares/docker/mysql8/log:/var/log/mysql
+      - /home/jayce/softwares/docker/mysql8/data:/var/lib/mysql
+      - /home/jayce/softwares/docker/mysql8/conf:/etc/mysql/conf
+      - /home/jayce/softwares/docker/mysql8/mysql-files:/var/lib/mysql-files
+
+  nestjs-app:
+    build: .
+    ports:
+      - '4567:4567'
+    environment:
+      - DATABASE_URL=mysql://root:123456@db:3306/zhongyi_blog_prisma
+    volumes:
+      - /usr/local/blog-assets/:/usr/local/blog-assets/
+    depends_on:
+      - db

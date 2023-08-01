@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateAdminAboutDto } from './dto/create-admin.about.dto';
 import { UpdateAdminAboutDto } from './dto/update-admin.about.dto';
 import { PrismaService } from '@/prisma/prisma.service';
-import { About } from '@prisma/client';
 import { Result } from '@/admin/dto/Result.dto';
 @Injectable()
 export class AdminAboutService {

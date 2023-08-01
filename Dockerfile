@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 RUN apk add --no-cache libc6-compat
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+COPY package*.json  pnpm-lock.yaml ./
 
 RUN npm install -g pnpm
 ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
@@ -19,6 +19,9 @@ COPY . .
 
 # Creates a "dist" folder with the production build
 RUN pnpm run build
-
+RUN npx prisma generate
 # Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+CMD [ "node", "dist/src/main.js" ]
+
+#指令只是声明容器将会使用哪些端口，并不会影响容器的实际运行
+EXPOSE 4567

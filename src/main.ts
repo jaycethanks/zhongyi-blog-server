@@ -3,6 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
+console.log('[process.env.$ENV_TEST2]: ', process.env.ENV_TEST2);
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
