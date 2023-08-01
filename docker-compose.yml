@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  nginx:
+    build: ./docker/nginx/
+    ports:
+      - '8989:8989'
+    volumes:
+      - /usr/local/blog-assets:/usr/local/blog-assets
+
   db:
     image: jaycethanks/zhongyi-blog-server:latest
     ports:
