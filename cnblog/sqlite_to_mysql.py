@@ -17,7 +17,7 @@ for row in results:
     converted_row = {
         'artid': row[0],  # 将 id 字段映射为 artid
         'sort': 0,
-        'author_id': '1d58a529-51d8-475d-b923-e8d35471624b',
+        'author_id': 'f3e63961-5b62-4a77-9bb8-d7f3252fb694',
         'title': row[1],
         'description': None,  # 将 AutoDesc 字段映射为 description
         'content': row[4],

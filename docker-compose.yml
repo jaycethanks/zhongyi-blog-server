@@ -11,7 +11,7 @@ services:
       - app-net
 
   db:
-    image: jaycethanks/zhongyi-blog-server:latest
+    image: mysql
     ports:
       - '3396:3306'
     environment:
@@ -36,7 +36,6 @@ services:
       - db
     networks:
       - app-net
-
   # zhongyi-blog:
   #   build:
   #     context: https://github.com/jaycethanks/zhongyi-blog.git#main
