@@ -20,6 +20,7 @@ COPY . .
 # Creates a "dist" folder with the production build
 RUN pnpm run build
 RUN npx prisma generate
+RUN npx prisma migrate deploy
 # Start the server using the production build
 CMD [ "node", "dist/src/main.js" ]
 
