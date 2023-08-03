@@ -26,3 +26,5 @@ npm i pnpm -g
 cat alias p='pnpm' >> ~/.bash_aliases
 source ~/.bash_aliases
 
+# 安装 ts-node
+npm i ts-node -g

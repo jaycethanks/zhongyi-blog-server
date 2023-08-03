@@ -18,10 +18,10 @@ const prisma = new PrismaClient({
 async function main() {
   const user = await prisma.user.create({
     data: {
-      name: 'admin',
-      nickname: 'administer',
-      phone: '',
-      email: 'jayce@example.com',
+      name: 'wangzhuang',
+      nickname: 'wangzhuang',
+      phone: '1341231412',
+      email: 'wangzhuang@example.com',
       password: '1234',
       avatar:
         'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/850.jpg',
