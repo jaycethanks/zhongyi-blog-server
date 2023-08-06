@@ -24,4 +24,11 @@ export class BlogPostsResolver {
     // const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
     return this.blogPostsService.findById(uid, artid);
   }
+
+  @Query(() => [ArticleDto], { name: 'postsList', nullable: true })
+  async findPostsListByCatid(@Context() context, @Args('catid') catid: string) {
+    const uid = context.req.headers.uid;
+    // const uid = 'd70b49b6-3b81-4f40-9623-f1d836027042';
+    return this.blogPostsService.findPostsListByCatid(uid, catid);
+  }
 }

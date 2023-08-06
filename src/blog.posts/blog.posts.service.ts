@@ -6,6 +6,23 @@ import { encode2Base64 } from '@/utils';
 @Injectable()
 export class BlogPostsService {
   constructor(private readonly prisma: PrismaService) {}
+  async findPostsListByCatid(userid: any, catid: string) {
+    return this.prisma.article.findMany({
+      where: {
+        authorId: userid,
+        catid: catid,
+        visible: 1,
+        status: 1, // 发布
+      },
+      include: {
+        author: true,
+        category: true,
+        column: true,
+        tags: true,
+        comments: true,
+      },
+    });
+  }
   async findById(userid: string, artid: string) {
     const res = await this.prisma.article.findFirstOrThrow({
       where: {

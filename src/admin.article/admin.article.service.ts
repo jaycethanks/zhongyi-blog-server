@@ -54,6 +54,11 @@ export class AdminArticleService {
               connect: {
                 catid: category,
               },
+              update: {
+                relateCount: {
+                  increment: 1,
+                },
+              },
             }
           : undefined,
         tags:
@@ -93,6 +98,11 @@ export class AdminArticleService {
             },
             category: {
               disconnect: true,
+              update: {
+                relateCount: {
+                  decrement: 1,
+                },
+              },
             },
             tags: {
               set: [], // disconnect all related records (https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#disconnect-all-related-records)
@@ -112,6 +122,13 @@ export class AdminArticleService {
           data,
         });
       }
+
+      // 更新分类关联表的 关联数量字段
+      // if (column) {
+      //   // 如果 文章 携带了 分类： 1. 先去查有没有历史关联， 如果有， 则不需要操作，否则关联数 +1
+      //   const  hasRelatedCol = await this.prisma.
+      // }
+
       return Result.okData(res);
     } catch (error) {
       console.log('[error]: ', error);

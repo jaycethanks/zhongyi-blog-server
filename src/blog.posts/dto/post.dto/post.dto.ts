@@ -35,4 +35,5 @@ export class ArticleDto {
   password?: string;
   visible?: boolean;
   status?: number;
+  catid?: string;
 }
