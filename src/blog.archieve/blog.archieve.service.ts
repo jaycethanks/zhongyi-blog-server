@@ -21,6 +21,9 @@ export class BlogArchieveService {
         createdAt: true,
         description: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     if (!res) return [];
 
@@ -55,6 +58,9 @@ export class BlogArchieveService {
           gte: new Date(`${year}-01-01`),
           lt: new Date(`${Number(year) + 1}-01-01`),
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
