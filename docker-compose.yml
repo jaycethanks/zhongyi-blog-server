@@ -2,6 +2,7 @@ version: '3'
 
 services:
   nginx:
+    container_name: 'nginx'
     build: ./docker/nginx/
     ports:
       - '8989:8989'
@@ -11,6 +12,7 @@ services:
       - app-net
 
   db:
+    container_name: 'db'
     image: mysql
     ports:
       - '3396:3306'
@@ -25,6 +27,7 @@ services:
       - app-net
 
   nestjs-app:
+    container_name: 'nestjs-app'
     build: .
     ports:
       - '4567:4567'
