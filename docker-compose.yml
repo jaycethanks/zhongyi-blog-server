@@ -5,7 +5,7 @@ services:
     container_name: 'nginx'
     build: ./docker/nginx/
     ports:
-      - '8989:8989'
+      - '8988:8989'
     volumes:
       - /usr/local/blog-assets:/usr/local/blog-assets
     networks:
@@ -30,7 +30,7 @@ services:
     container_name: 'nestjs-app'
     build: .
     ports:
-      - '4567:4567'
+      - '4566:4567'
     environment:
       - DATABASE_URL=mysql://root:123456@db:3306/zhongyi_blog_prisma
     volumes:
